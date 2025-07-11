@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27">
+    <g transform="translate(-22 -223)">
+        <rect data-name="사각형 143258" width="27" height="27" rx="5" transform="translate(22 223)" style="fill:none"/>
+        <g data-name="그룹 4863">
+            <path data-name="패스 10874" d="m0 14.188 3.672 3.672v-7.345z" transform="translate(25.859 222.342)" style="fill:#d4d4d4"/>
+            <path data-name="패스 10877" d="m0 3.672 3.672 3.673V0z" transform="rotate(90 -93.832 133.028)" style="fill:#d4d4d4"/>
+            <path data-name="패스 10875" d="m0 3.672 3.672 3.673V0z" transform="rotate(180 22.6 120.101)" style="fill:#d4d4d4"/>
+            <path data-name="패스 10876" d="m0 3.672 3.672 3.673V0z" transform="rotate(-90 139.029 107.171)" style="fill:#d4d4d4"/>
+            <path data-name="패스 10888" d="M4.544 2.858H2.857v1.687a.39.39 0 1 1-.78 0V2.858H.39a.39.39 0 0 1 0-.781h1.687V.39a.39.39 0 1 1 .78 0v1.688h1.687a.39.39 0 0 1 0 .781z" transform="rotate(90 -98.034 136.03)" style="fill:#d4d4d4"/>
+            <path data-name="패스 10890" d="M1261.384-1086.741v-23h23v23h-23" transform="translate(-1237.361 1334.771)" style="stroke:#d4d4d4;stroke-linecap:square;stroke-miterlimit:10;stroke-width:.5px;stroke-dasharray:3 3;fill:none"/>
+        </g>
+    </g>
+</svg>

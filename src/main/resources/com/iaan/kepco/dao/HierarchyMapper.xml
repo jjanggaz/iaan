@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.HierarchyMapper">
+
+    <select id="selectHierarchyTree" resultType="TreeDTO">
+	
+		SELECT * 
+			FROM (
+			SELECT CD_ID AS ID ,'#' parent ,cd_nm AS TEXT , 1 lvl ,'{"class":"no_checkbox"}' AS a_attr, NULL icon 
+			FROM tb_kc_code
+			WHERE  CD_DESC1 = '1'
+				AND CD_ID IN (SELECT DISTINCT DWG_PLANT FROM tb_kc_dwg_mst )
+			UNION ALL
+			SELECT  CD_ID AS ID ,parent_ID parent ,cd_nm , 2 lvl ,'{"class":"no_checkbox"}' AS a_attr, NULL icon 
+			FROM tb_kc_code 
+			WHERE  CD_DESC1 = '2'
+				AND CD_ID IN (SELECT DISTINCT DWG_UNIT FROM tb_kc_dwg_mst )
+			UNION ALL
+			SELECT CD_ID AS ID ,parent_ID ,cd_nm , 3 lvl ,'{"class":""}' AS a_attr, NULL icon 
+			FROM tb_kc_code
+			WHERE  CD_DESC1 = '3'
+				AND CD_ID IN (SELECT DISTINCT DWG_BUILDING FROM tb_kc_dwg_mst )
+			UNION ALL
+			SELECT CD_ID AS ID ,parent_ID ,cd_nm , 4 lvl ,'{"class":""}' AS a_attr, NULL icon    
+			FROM tb_kc_code
+			WHERE  CD_DESC1 = '4' AND cd_desc2 = 'LVL'
+				AND CD_ID IN (SELECT DISTINCT DWG_LEVEL FROM tb_kc_dwg_mst )
+			UNION ALL 
+			SELECT CONCAT(DWG_LEVEL,LPAD(TAG_SEQ,2,'0'))  AS ID, DWG_LEVEL PARENT,CONCAT(TAG_NM,' (',SUBSTRING_INDEX(A.DWG_FILE_NM, '.', 1),')')  , 5 LVL, CASE WHEN A.FILE_JSON IS NULL THEN  '{"class":""}' ELSE  '{"class":"ico-json"}' END AS A_ATTR, b.tag_seq as  ICON  
+			FROM tb_kc_dwg_mst A , tb_kc_dwg_tag B
+			WHERE A.DWG_SEQ = B.DWG_SEQ 
+				and DWG_LEVEL is not null
+			UNION ALL 
+			SELECT  CONCAT(A.DWG_LEVEL,LPAD(C.TAG_SEQ,2,'0') , C.SYMBOL_SEQ) AS ID, CONCAT(DWG_LEVEL,LPAD(B.TAG_SEQ,2,'0'))  PARENT,SYMBOL_NM , 6 LVL, '{"class":"no_checkbox"}' AS A_ATTR, NULL as  ICON  
+			FROM tb_kc_dwg_mst A , tb_kc_dwg_tag B  , tb_kc_dwg_symbol C 
+			WHERE A.DWG_SEQ = B.DWG_SEQ
+				AND B.DWG_SEQ = C.DWG_SEQ
+				AND B.TAG_SEQ = C.TAG_SEQ
+				and a.dwg_level is not null
+			UNION all
+			SELECT  CONCAT(A.DWG_LEVEL,LPAD(C.TAG_SEQ,2,'0') , C.symbol_SEQ, D.HANDLE) AS ID,  CONCAT(A.DWG_LEVEL,LPAD(C.TAG_SEQ,2,'0') , C.symbol_SEQ)   PARENT,D.GUBUN_RENAME , 7 LVL, '{"class":"no_checkbox"}' AS A_ATTR, D.HANDLE as  ICON  
+			FROM tb_kc_dwg_mst A , tb_kc_dwg_tag B  , TB_KC_DWG_symbol C ,tb_kc_json_symbol D
+			WHERE A.DWG_SEQ = B.DWG_SEQ
+				AND B.DWG_SEQ = C.DWG_SEQ
+				AND B.TAG_SEQ = C.TAG_SEQ
+			 	AND A.DWG_SEQ = D.DWG_SEQ
+			 	AND B.TAG_NM = D.TAG
+			 	AND C.SYMBOL_NM = D.GUBUN
+			
+			) TA 
+		ORDER BY ID
+    </select>
+
+    <select id="selectHierarchySearchResultList" resultType="CheckDwgDTO"  parameterType="SearchDTO">
+	
+		SELECT	DD.DWG_SEQ	
+			, TAG.TAG_SEQ
+			,TAG.TAG_NM AS ROOT_VALVE_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_PLANT) PLANT_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_UNIT) UNIT_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_BUILDING) BUILDING_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_LEVEL) LEVEL_NM
+		FROM tb_kc_dwg_tag TAG
+			,tb_kc_dwg_mst DD
+		
+		WHERE	TAG.DWG_SEQ = DD.DWG_SEQ 
+			<if test='dwgPlant != null and dwgPlant != ""'>
+			 AND  DD.DWG_PLANT = #{dwgPlant}
+			</if>
+			<if test='dwgUnit != null and dwgUnit != ""'>
+			 AND  DD.DWG_Unit = #{dwgUnit}
+			</if>
+			<if test='dwgBuilding != null and dwgBuilding != ""'>
+			 AND  DD.DWG_BUILDING = #{dwgBuilding}
+			</if>
+			<if test='dwgLevel != null and dwgLevel != ""'>
+			 AND  DD.DWG_LEVEL = #{dwgLevel}
+			</if>
+			<if test='tagNm != null and tagNm != ""'>
+			 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+			</if>
+    </select>
+    
+    
+    <insert id="insertMarkUp"  parameterType="MarkupDTO">
+    <selectKey keyProperty="titleSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(title_seq), 0) + 1 FROM tb_kc_markup
+    </selectKey>
+    INSERT INTO tb_kc_markup (
+    		 title_seq                               
+			,title                                
+			,base64Screenshot                
+			,REG_ID                                
+			,REG_DATE   
+	)VALUES (#{titleSeq}
+			,#{title}
+			,#{base64screenshot}
+			,#{regId}
+			, NOW()
+	)
+    </insert>
+    
+	<select id="selectMarkupList" resultType="MarkupDTO"  parameterType="MarkupDTO">
+	
+		SELECT	title_seq                               
+			,title                                
+			,base64Screenshot                
+			,REG_ID                                
+			,REG_DATE   
+		FROM tb_kc_markup 
+		WHERE	1=1
+			<if test='title != null and title != ""'>
+			 AND  title = #{title}
+			</if>
+			
+    </select>
+
+</mapper>

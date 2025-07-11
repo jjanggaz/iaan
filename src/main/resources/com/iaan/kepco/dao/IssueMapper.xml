@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.IssueMapper">
+
+    <select id="selectIssueList" parameterType="SearchDTO" resultType="CheckIssueDTO">
+    SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+	FROM	(
+			SELECT	DI.ISSUE_SEQ, DI.TAG_SEQ, DI.ISSUE_TITLE, REPLACE(DI.ISSUE_CONTS, CHR(10), '<![CDATA[<br>]]>') AS ISSUE_CONTS, DI.STATUS
+					, DI.REG_ID, DI.MOD_ID
+					, DI.FILE_ID
+					, CASE WHEN DATE_FORMAT(DI.REG_DATE, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN DATE_FORMAT(DI.REG_DATE, '%T') ELSE DATE_FORMAT(DI.REG_DATE, '%Y-%m-%d') END REG_DATE
+					, CASE WHEN DATE_FORMAT(DI.MOD_DATE, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN DATE_FORMAT(DI.MOD_DATE, '%T') ELSE DATE_FORMAT(DI.MOD_DATE, '%Y-%m-%d') END MOD_DATE
+					, (SELECT COUNT(IC_SEQ) FROM tb_kc_issue_comment WHERE ISSUE_SEQ = DI.ISSUE_SEQ) AS COMMENT_CNT
+					, TAG.TAG_NM ROOT_VALVE_NM
+					,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_PLANT) PLANT_NM
+					,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_UNIT) UNIT_NM
+					,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_BUILDING) BUILDING_NM
+					,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_LEVEL ) LEVEL_NM
+			 		
+					, DC1.CD_NM AS STATUS_NM
+			FROM 	tb_kc_dwg_MST MST 
+			   , tb_kc_dwg_tag TAG
+			   , tb_kc_issue DI
+				INNER JOIN tb_kc_code DC1
+					ON DC1.CD_GROUP = '003'
+						AND	DC1.CD_ID = DI.STATUS
+			WHERE	MST.DWG_SEQ = TAG.DWG_SEQ
+				AND TAG.TAG_SEQ = DI.TAG_SEQ 
+				AND DI.STATUS != '900'
+				<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  MST.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  MST.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  MST.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  MST.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+				
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+	ORDER BY ROWNUM DESC
+	LIMIT #{startRowNum}, #{pageSize}
+    </select>
+
+    <select id="selectIssueCnt" parameterType="SearchDTO" resultType="SearchDTO">
+	SELECT	COUNT(DI.ISSUE_SEQ) AS TOTAL_DATA_CNT
+	FROM tb_kc_dwg_MST MST 
+		,tb_kc_dwg_tag TAG
+		,tb_kc_issue DI
+		INNER JOIN tb_kc_code DC1 ON (DC1.CD_GROUP = '003' AND	DC1.CD_ID = DI.STATUS)
+	WHERE	MST.DWG_SEQ = TAG.DWG_SEQ
+		AND TAG.TAG_SEQ = DI.TAG_SEQ 
+		AND DI.STATUS != '900'
+		<if test='dwgPlant != null and dwgPlant != ""'>
+		 AND  MST.DWG_PLANT = #{dwgPlant}
+		</if>
+		<if test='dwgUnit != null and dwgUnit != ""'>
+		 AND  MST.DWG_Unit = #{dwgUnit}
+		</if>
+		<if test='dwgBuilding != null and dwgBuilding != ""'>
+		 AND  MST.DWG_BUILDING = #{dwgBuilding}
+		</if>
+		<if test='dwgLevel != null and dwgLevel != ""'>
+		 AND  MST.DWG_LEVEL = #{dwgLevel}
+		</if>
+		<if test='tagNm != null and tagNm != ""'>
+		 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+		</if>
+		
+    </select>
+
+    <select id="selectIssueOne" parameterType="SearchDTO" resultType="CheckIssueDTO">
+	SELECT	DI.ISSUE_SEQ, DI.TAG_SEQ, DI.ISSUE_TITLE, DI.ISSUE_CONTS, DI.STATUS
+			, DI.REG_ID, DI.REG_DATE, DI.MOD_ID, DI.MOD_DATE
+			, DI.FILE_ID
+			, (SELECT COUNT(IC_SEQ) FROM tb_kc_issue_comment WHERE ISSUE_SEQ = DI.ISSUE_SEQ) AS COMMENT_CNT
+			, TAG.TAG_NM ROOT_VALVE_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_PLANT) PLANT_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_UNIT) UNIT_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_BUILDING) BUILDING_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = MST.DWG_LEVEL ) LEVEL_NM
+	 		
+			
+			, DC1.CD_NM AS STATUS_NM
+	FROM	tb_kc_dwg_MST MST 
+			,tb_kc_dwg_tag TAG
+			,tb_kc_issue DI
+		INNER JOIN tb_kc_code DC1
+			ON DC1.CD_GROUP = '003'
+				AND	DC1.CD_ID = DI.STATUS
+	WHERE	MST.DWG_SEQ = TAG.DWG_SEQ
+		AND TAG.TAG_SEQ = DI.TAG_SEQ 
+		<if test='issueSeq != null and issueSeq != ""'>
+		AND DI.ISSUE_SEQ = #{issueSeq}
+		</if>
+		
+		<if test='tagNm != null and tagNm != ""'>
+		 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+		</if>
+    </select>
+    
+    
+    <select id="selectIssueFile" parameterType="SearchDTO" resultType="FileDTO">
+	
+	SELECT  #{issueSeq} AS ISSUE_SEQ , FILE_ID, FILE_SEQ 
+	FROM tb_kc_atch_file
+	WHERE file_id IN (
+		SELECT file_id
+		FROM tb_kc_issue
+		WHERE ISSUE_SEQ =  #{issueSeq}) 
+	
+	</select>
+
+    <insert id="insertIssue" parameterType="CheckIssueDTO">
+    <selectKey keyProperty="issueSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(ISSUE_SEQ), 0) + 1 FROM tb_kc_issue
+    </selectKey>
+    INSERT INTO tb_kc_issue (ISSUE_SEQ, TAG_SEQ, ISSUE_TITLE, ISSUE_CONTS, STATUS, FILE_ID,REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+				VALUES 	(#{issueSeq}, #{tagSeq}, #{issueTitle}, #{issueConts}, '100', #{fileId}, #{regId}, NOW(), #{regId}, NOW())
+    </insert>
+
+
+ 	
+
+    <update id="updateIssue" parameterType="CheckIssueDTO">
+    UPDATE	tb_kc_issue
+    	SET	ISSUE_TITLE = #{issueTitle}
+    		, ISSUE_CONTS = #{issueConts}
+    		, MOD_ID = #{modId}
+    		, MOD_DATE = NOW()
+	WHERE	ISSUE_SEQ = #{issueSeq}
+    </update>
+
+    <update id="deleteIssue" parameterType="CheckIssueDTO">
+    UPDATE	tb_kc_issue
+    	SET	STATUS = '900'
+	WHERE	ISSUE_SEQ = #{issueSeq}
+    </update>
+</mapper>

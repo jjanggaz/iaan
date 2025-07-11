@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.JsonSymbolMapper">
+
+	<update id="updateJsonSymbolStatus" parameterType="JsonSymbolDTO">
+    UPDATE	tb_kc_json_symbol
+    	SET	DATA_STATUS = 'N'
+    WHERE	DWG_SEQ = #{dwgSeq}
+    </update>
+
+    <insert id="insertJsonSymbol" parameterType="JsonSymbolDTO">
+    INSERT INTO tb_kc_JSON_SYMBOL(DWG_SEQ, HANDLE, GUBUN, TAG
+    						, LINE_GROUP, LINE_SEQ, LENGTH, THD_OD, SYMBOL,ROOT_PLATE)
+			VALUES(#{dwgSeq}, #{handle}, #{gubun}, #{tag}
+							, #{lineGroup}, #{lineSeq}, #{length}, #{thdOd}, #{symbol}, #{rootPlate})
+	ON DUPLICATE KEY UPDATE
+			DWG_SEQ = #{dwgSeq}
+	        , HANDLE = #{handle}
+	        , GUBUN = #{gubun}
+	        , TAG = #{tag}
+	        , LINE_GROUP = #{lineGroup}
+	        , LINE_SEQ = #{lineSeq}
+	        , LENGTH = #{length}
+	        , THD_OD = #{thdOd}
+	        , SYMBOL = #{symbol}
+	        , DATA_STATUS = 'Y'
+	        , ROOT_PLATE = #{rootPlate} 
+	        
+
+    </insert>
+
+    <update id="updateJsonSymbolHSeq" parameterType="JsonSymbolDTO">
+    UPDATE tb_kc_json_symbol a, (SELECT	PDH.H_SEQ, PJS.LINE_GROUP
+								FROM	tb_kc_dwg_hierarchy PDH
+									INNER JOIN tb_kc_hierarchy DH
+										ON DH.H_SEQ = PDH.H_SEQ
+									INNER JOIN tb_kc_json_symbol PJS
+										ON PJS.DWG_SEQ = #{dwgSeq}
+											AND	PJS.GUBUN = 'ROOT_VALVE'
+											AND	PJS.TAG = DH.HIERARCHY_NM) b
+		SET a.H_SEQ = b.H_SEQ
+	WHERE a.LINE_GROUP = b.LINE_GROUP
+		AND	a.DWG_SEQ = #{dwgSeq}
+    </update>
+
+    <update id="updateJsonSymbolGubun" parameterType="JsonSymbolDTO">
+		UPDATE	tb_kc_json_symbol A,
+				(
+				SELECT DWG_SEQ,GUBUN,HANDLE, row_number () over(partition by DWG_SEQ,GUBUN order by DWG_SEQ,GUBUN,HANDLE ASC) AS NUM
+				FROM tb_kc_json_symbol
+				WHERE DWG_SEQ =#{dwgSeq}
+				GROUP BY  DWG_SEQ,GUBUN,HANDLE
+				ORDER BY  DWG_SEQ,GUBUN,HANDLE
+				) B
+			 SET	A.GUBUN_RENAME = CONCAT( B.GUBUN,'_',CAST(B.NUM AS CHAR))
+			 WHERE A.DWG_SEQ = B.DWG_SEQ
+				 AND A.GUBUN = B.GUBUN
+				 AND A.HANDLE = B.HANDLE
+				 AND A.DWG_SEQ = #{dwgSeq}	;
+		   
+		 UPDATE	tb_kc_json_symbol A,
+				(
+				 SELECT a.DWG_SEQ,a.TAG,a.ROOT_PLATE , b.tag_seq
+				FROM tb_kc_json_symbol a 
+					INNER JOIN tb_kc_dwg_tag B ON (A.DWG_SEQ = B.DWG_SEQ  AND A.TAG = B.TAG_NM ) 
+				WHERE A.DWG_SEQ =#{dwgSeq}
+					AND A.TAG IS NOT NULL 
+					AND A.TAG != ''
+				) B
+			 SET	A.TAG = B.TAG , a.TAG_SEQ = b.tag_seq
+			 WHERE A.DWG_SEQ = B.DWG_SEQ
+			 AND A.ROOT_PLATE = B.ROOT_PLATE
+			 AND A.DWG_SEQ  =#{dwgSeq} ;
+		INSERT INTO tb_kc_dwg_symbol 
+			SELECT A.DWG_SEQ,B.TAG_SEQ,C.CD_ID , A.GUBUN ,'ADMIN', NOW()
+		    FROM tb_kc_json_symbol A
+				INNER JOIN tb_kc_dwg_tag B ON (A.TAG = B.TAG_NM ) 
+				INNER JOIN (SELECT CD_ID, CD_NM  FROM tb_kc_code WHERE CD_GROUP ='010'  AND USE_YN = 'Y' ) C ON (A.GUBUN = C.CD_NM)
+			WHERE A.DWG_SEQ = #{dwgSeq}
+			  AND ( A.DWG_SEQ,B.TAG_SEQ,C.CD_ID ) NOT IN ( SELECT DWG_SEQ,TAG_SEQ,SYMBOL_SEQ FROM tb_kc_dwg_symbol WHERE DWG_SEQ  =#{dwgSeq} )
+			GROUP BY DWG_SEQ,B.TAG_SEQ,C.CD_ID ;
+			
+	
+			
+			 
+    </update>
+    
+
+    <delete id="deleteJsonSymbolStatus" parameterType="JsonSymbolDTO">
+    DELETE
+    FROM	tb_kc_json_symbol
+    WHERE	DWG_SEQ = #{dwgSeq}
+    	AND	DATA_STATUS = 'N'
+    </delete>
+
+
+</mapper>

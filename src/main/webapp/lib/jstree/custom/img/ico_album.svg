@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 26 26">
+    <g data-name="그룹 3270">
+        <path data-name="Icon metro-image" d="M20.647 5.061v14.461H3.778V5.063zm0-1.205H3.776a1.209 1.209 0 0 0-1.205 1.205v14.463a1.209 1.209 0 0 0 1.205 1.205h16.873a1.209 1.209 0 0 0 1.205-1.205V5.061a1.209 1.209 0 0 0-1.205-1.205zm-2.41 4.218a1.808 1.808 0 1 1-1.808-1.808 1.808 1.808 0 0 1 1.808 1.808zm1.205 10.244H4.981v-2.41L9.2 8.677l4.82 6.023h1.205l4.218-3.616z" transform="translate(.805 .929)" style="fill:#fff"/>
+    </g>
+    <path data-name="사각형 2914" transform="translate(0 .001)" style="fill:none" d="M0 0h26v26H0z"/>
+</svg>

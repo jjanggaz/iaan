@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27.5" height="27" viewBox="0 0 27.5 27">
+    <path data-name="사각형 1577" transform="translate(.25)" style="fill:none" d="M0 0h27v27H0z"/>
+    <path data-name="빼기 27" d="M9.5 22h-7A2.637 2.637 0 0 1 0 19.25V2.749A2.637 2.637 0 0 1 2.5 0h7v1.1h-7A1.583 1.583 0 0 0 1 2.749v16.5A1.582 1.582 0 0 0 2.5 20.9h7V22z" transform="rotate(90 10.875 13.875)" style="fill:#d4d4d4"/>
+    <path data-name="선 304" transform="rotate(90 6.875 20.625)" style="stroke:#d4d4d4;stroke-width:2px;fill:none" d="M0 0v9"/>
+    <path data-name="선 305" transform="rotate(90 -2.375 11.375)" style="stroke:#d4d4d4;stroke-width:2px;fill:none" d="M0 0v9"/>
+    <path data-name="빼기 28" d="M7.054 22H4v-1.1h3a1.424 1.424 0 0 0 1.014-.433l.675.81a2.468 2.468 0 0 1-.766.531l-.013.006h-.011l-.031.012h-.014l-.037.014h-.031l-.015.005-.015.006h-.032l-.021.007h-.649zM2 22H0v-1.1h2V22zm7.5-2.67-1-.032V16.03h1v3.3zm0-5.5h-1v-3.3h1v3.3zm0-5.5h-1v-3.3h1v3.3zm0-5.5h-1v-.08a1.66 1.66 0 0 0-.917-1.521l.39-1.013a2.388 2.388 0 0 1 .349.2l.009.006.01.007h.021s.006.005.008.005v.005h.034L8.45.51h.007l.009.007a2.787 2.787 0 0 1 .958 1.6.039.039 0 0 1 0 .013V2.148a.023.023 0 0 0 0 .006v.026a.048.048 0 0 1 0 .009.06.06 0 0 0 0 .009.034.034 0 0 1 0 .013.037.037 0 0 1 0 .012v.005a.047.047 0 0 0 0 .007v.016a.034.034 0 0 0 0 .01v.361a.039.039 0 0 0 0 .013v.194zM6 1.1H3V0h3v1.1zm-5 0H0V0h1v1.1z" transform="rotate(90 5.124 19.625)" style="fill:#d4d4d4"/>
+    <text transform="translate(11.25 16.5)" style="font-size:8px;font-family:NotoSans-Bold,Noto Sans;font-weight:700;fill:#d4d4d4"><tspan x="0" y="0">Y</tspan></text>
+</svg>

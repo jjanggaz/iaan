@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.WbsMapper">
+
+    <select id="selectWbsPlanList" parameterType="SearchDTO" resultType="WbsDTO">
+	   
+		SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+		FROM	(
+			SELECT C.TAG_SEQ
+				,A.DWG_PLANT
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+				,A.DWG_UNIT
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+				,A.DWG_BUILDING
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+				,A.DWG_LEVEL
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+				,B.TAG_NM AS ROOT_VALVE_NM
+				,C.W_CD
+				,C.START_DATE
+				,C.END_DATE
+				,C.PLAN_QUANTITY
+				, C.ACTUAL_QUANTITY
+				, ifnull(C.BUILDER,'') BUILDER
+				, C.BUILD_CONTENTS
+				, D.CD_NM AS WORK_CD_NM
+				, C.MOD_ID
+				, C.MOD_DATE
+			FROM tb_kc_dwg_mst A
+				, tb_kc_dwg_tag B
+				, TB_KC_WBS C
+				LEFT JOIN tb_kc_CODE D
+						ON D.CD_GROUP = '011'
+							AND	D.CD_ID = C.W_CD
+			WHERE  A.DWG_SEQ = B.DWG_SEQ
+				AND B.TAG_SEQ = C.TAG_SEQ
+			
+			    	<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  A.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  A.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  A.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  A.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+			ORDER BY A.DWG_BUILDING , B.TAG_SEQ
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+		ORDER BY ROWNUM
+		LIMIT #{startRowNum}, #{pageSize}
+	
+    </select>
+
+    <select id="selectWbsPlanCnt" parameterType="SearchDTO" resultType="SearchDTO">
+	
+		SELECT COUNT(C.TAG_SEQ)  AS TOTAL_DATA_CNT
+		FROM tb_kc_dwg_mst A
+				, tb_kc_dwg_tag B
+				, TB_KC_WBS C
+				LEFT JOIN tb_kc_CODE D
+						ON D.CD_GROUP = '011'
+							AND	D.CD_ID = C.W_CD
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+				AND B.TAG_SEQ = C.TAG_SEQ
+			   	<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  A.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  A.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  A.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  A.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+		ORDER BY A.DWG_BUILDING , B.TAG_SEQ
+    </select>
+
+     <select id="selectWbsPlanExcelList" parameterType="SearchDTO" resultType="WbsDTO">
+		SELECT C.TAG_SEQ
+			,A.DWG_PLANT
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+			,A.DWG_UNIT
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+			,A.DWG_BUILDING
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+			,A.DWG_LEVEL
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+			,B.TAG_NM AS ROOT_VALVE_NM
+			,C.W_CD
+			,C.START_DATE
+			,C.END_DATE
+			,C.PLAN_QUANTITY
+			, C.ACTUAL_QUANTITY
+			, C.BUILDER
+			, C.BUILD_CONTENTS
+			, D.CD_NM AS WORK_CD_NM
+			, C.MOD_ID
+			, C.MOD_DATE
+		FROM tb_kc_dwg_mst A
+			, tb_kc_dwg_tag B
+			, TB_KC_WBS C
+			LEFT JOIN tb_kc_CODE D
+					ON D.CD_GROUP = '011'
+						AND	D.CD_ID = C.W_CD
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+			AND B.TAG_SEQ = C.TAG_SEQ
+		
+		    	<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  A.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  A.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  A.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  A.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+		ORDER BY A.DWG_BUILDING , B.TAG_SEQ
+    </select>
+
+    <select id="selectWbsCalcList" parameterType="SearchDTO" resultType="WbsDTO">
+    WITH RECURSIVE symbol_length (TAG_SEQ, THD_OD, LENGTH) AS
+	(
+		SELECT	TAG_SEQ, THD_OD, SUM((DATA1 * 12) + (DATA2) + (DATA3)) AS LENGTH
+		FROM	(
+					SELECT	*
+							, SUBSTRING_INDEX(LENGTH, '-' , 1) as DATA1
+							, SUBSTRING_INDEX(SUBSTRING_INDEX(LENGTH, '+' , 1), '-' , -1) as DATA2
+							, CASE WHEN INSTR(LENGTH, '+') > 0 THEN
+									SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(LENGTH, '+' , 2), '+' , -1), '/' , 1) / SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(LENGTH, '+' , 2), '+' , -1), '/' , -1)
+								ELSE '0' END DATA3
+					FROM	TB_KC_json_symbol
+					WHERE	TAG_SEQ IS NOT NULL
+						AND	GUBUN = 'TUBE_LINE'
+				) TEMP2
+		GROUP BY TAG_SEQ, THD_OD
+	)
+	SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+		FROM	(
+			SELECT C.TAG_SEQ
+				,A.DWG_PLANT
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+				,A.DWG_UNIT
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+				,A.DWG_BUILDING
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+				,A.DWG_LEVEL
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+				,B.TAG_NM AS ROOT_VALVE_NM
+				,C.W_CD
+				,C.START_DATE
+				,C.END_DATE
+				,C.PLAN_QUANTITY
+				, C.ACTUAL_QUANTITY
+				, C.BUILDER
+				, C.BUILD_CONTENTS
+				, D.CD_NM AS WORK_CD_NM
+				, C.MOD_ID
+				, C.MOD_DATE
+				, IFNULL(SL.LENGTH, 0) AS LENGTH
+				, SL.THD_OD
+				, FORMAT(ROUND(SL.LENGTH * DC2.CD_DESC2),0) AS EXPENSE
+			FROM tb_kc_dwg_mst A
+				, tb_kc_dwg_tag B
+				, TB_KC_WBS C
+				LEFT JOIN tb_kc_CODE D
+						ON D.CD_GROUP = '011'
+							AND	D.CD_ID = C.W_CD
+				LEFT JOIN symbol_length SL
+					ON  C.TAG_SEQ = SL.TAG_SEQ
+				INNER JOIN TB_KC_CODE DC2
+					ON DC2.CD_GROUP = '007'
+						AND	DC2.CD_ID = '001'
+			WHERE  A.DWG_SEQ = B.DWG_SEQ
+				AND B.TAG_SEQ = C.TAG_SEQ
+			
+			    	<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  A.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  A.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  A.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  A.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+			ORDER BY A.DWG_BUILDING , B.TAG_SEQ
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+		ORDER BY ROWNUM
+		LIMIT #{startRowNum}, #{pageSize}
+	
+    </select>
+
+    <select id="selectWbsCalcCnt" parameterType="SearchDTO" resultType="SearchDTO">
+	SELECT COUNT(C.TAG_SEQ)  AS TOTAL_DATA_CNT
+		FROM tb_kc_dwg_mst A
+				, tb_kc_dwg_tag B
+				, TB_KC_WBS C
+				LEFT JOIN tb_kc_CODE D
+						ON D.CD_GROUP = '011'
+							AND	D.CD_ID = C.W_CD
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+				AND B.TAG_SEQ = C.TAG_SEQ
+			   	<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  A.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  A.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  A.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  A.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+		ORDER BY A.DWG_BUILDING , B.TAG_SEQ
+    </select>
+
+    <select id="selectWbsCheck" parameterType="WbsDTO" resultType="WbsDTO">
+		WITH PLANT AS (
+		  	SELECT CD_ID FROM tb_kc_code WHERE CD_GROUP = '012' AND CD_NM = #{plantNm}
+		
+		),
+		UNIT AS (
+		SELECT A.CD_ID
+		FROM tb_kc_code A, PLANT B 
+		WHERE A.PARENT_ID = B.CD_ID
+		AND A.CD_NM = #{unitNm}
+		) ,
+		BUILD AS (
+		SELECT  A.CD_ID
+		FROM tb_kc_code A, UNIT BB 
+		WHERE A.PARENT_ID = BB.CD_ID
+		AND A.CD_NM = #{buildingNm}
+		),
+		LVL AS (
+		SELECT  A.CD_ID
+		FROM tb_kc_code A, BUILD BB 
+		WHERE A.PARENT_ID = BB.CD_ID
+		AND A.CD_NM = #{levelNm}
+		) , TAG AS
+		(SELECT TAG_SEQ FROM tb_kc_dwg_tag
+		WHERE TAG_NM  = #{rootValveNm} )
+		, WCD AS (
+		SELECT	CD_ID AS W_CD
+					FROM	tb_kc_code
+					WHERE	CD_GROUP = '011'
+						AND	CD_NM = #{wCdNm})
+		, actual AS(
+		  SELECT case when  PLAN_QUANTITY <![CDATA[<]]> ACTUAL_QUANTITY + ${actualQuantity}  then '0' ELSE '1' END AS quantity
+		  from tb_kc_wbs a , tag b
+		  WHERE a.tag_seq  = b.TAG_SEQ
+		)
+		SELECT * 
+		FROM LVL LEFT OUTER JOIN TAG ON(1=1)
+		   LEFT OUTER JOIN WCD ON(1=1)
+		   LEFT OUTER JOIN actual ON(1=1)
+    </select>
+    
+    
+    
+    
+
+    <insert id="insertWbs" parameterType="WbsDTO">
+     
+	    INSERT INTO tb_kc_WBS(TAG_SEQ, W_CD, START_DATE, END_DATE
+						, PLAN_QUANTITY, ACTUAL_QUANTITY, BUILDER, BUILD_CONTENTS
+						, USE_FLAG, REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+				VALUES(	#{tagSeq}, #{wCd}, #{startDate}, #{endDate}
+				     	 , #{planQuantity}, #{actualQuantity}, #{builder}, #{buildContents}
+				     	 , 'Y', #{regId}, NOW(), #{regId}, NOW())
+		ON DUPLICATE KEY UPDATE
+				START_DATE = #{startDate}
+		        , END_DATE = #{endDate}
+		        , PLAN_QUANTITY = #{planQuantity}
+		        , ACTUAL_QUANTITY =ACTUAL_QUANTITY + #{actualQuantity}
+		        , BUILDER = #{builder}
+		        , BUILD_CONTENTS = #{buildContents}
+		        , USE_FLAG = 'Y'
+		        , MOD_ID = #{regId}
+		        , MOD_DATE = NOW();
+		        
+		 INSERT INTO tb_kc_wbs_ACTUAL(TAG_SEQ,ACTUAL_SEQ,ACTUAL_QUANTITY, BUILDER, BUILD_CONTENTS,REG_ID,REG_DATE)
+		 VALUES(#{tagSeq}, (SELECT nvl(max(actual_seq)+1,1) FROM tb_kc_wbs_ACTUAL wa where tag_seq  = #{tagSeq}) ,
+		  #{planQuantity}, #{builder}, #{buildContents}, #{regId}, NOW()
+		 );
+	
+    </insert>
+    <insert id="insertWbsActual" parameterType="WbsDTO">
+     	<selectKey keyProperty="actualSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(ACTUAL_SEQ), 0) + 1 FROM tb_kc_wbs_ACTUAL where tag_seq  = #{tagSeq}
+	
+    	</selectKey>
+     	INSERT INTO tb_kc_wbs_ACTUAL (
+     			TAG_SEQ
+     			,ACTUAL_SEQ
+     			,ACTUAL_QUANTITY
+     			,BUILD_CONTENTS
+     			,HANDLE
+     			,REG_ID
+     			,REG_DATE)
+		VALUES ( #{tagSeq}
+				,#{actualSeq} 
+				,#{actualQuantity}
+				,#{buildContents}
+				,#{handle}
+				,#{regId}
+				, NOW()
+		 )
+	
+    </insert>
+    
+    
+
+    <update id="deleteWbs" parameterType="WbsDTO">
+    UPDATE	tb_kc_WBS
+    	SET	USE_FLAG = 'D'
+	WHERE	H_SEQ = #{hSeq}
+		AND	W_CD = #{wCd}
+    </update>
+    
+    
+    <update id="updateWbs" parameterType="WbsDTO">
+    UPDATE	tb_kc_WBS
+    	SET	BUILDER = #{builder}
+    		,START_DATE = #{startDate}
+    		,END_DATE   = #{endDate}
+	WHERE	TAG_SEQ = #{tagSeq}
+		AND	W_CD = #{wCd}
+    </update>
+</mapper>

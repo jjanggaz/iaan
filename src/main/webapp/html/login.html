@@ -1,0 +1,50 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="/WEB-INF/include/jstl.jsp"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<!-- start::Head -->
+	<head>
+	<meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>설계점검시스템</title>
+  	<link rel="stylesheet" href="/lib/jquery/jquery-ui.css" />
+	 <link rel="stylesheet" href="/lib/materialdesignicons/materialdesignicons.min.css" />
+   	 <link rel="stylesheet" href="/css/init.css" />
+     <link rel="stylesheet" href="/css/login.css" />
+ 	</head>
+  	
+  	<body>
+   	<div id="wrap-page " class="loginPage">
+	 <main class="line-searchCond">
+ 
+ 		<section class="sect-left">
+		<img class="img-loginLogo" src="../img/ico_logo.png" alt="" />
+ 		<img src="images/login.png" alt="" />
+		</section>
+	
+	
+	<section class="sect-right">
+	<div class="wrap-sectRight">
+		<div class="line-title">
+		<span>로그인</span>	
+		<span>한전기술 다자간 협업시스템</span>
+	</div>
+		
+	<div class="loginForm"><input type="text" class="login-ID"  placeholder="User ID"></div>
+	<div class="loginForm"><input type="text" class="login-PW"  placeholder="Password"></div>
+		
+		
+	<ul class="list-checkBox">
+		<li><input class="checkBox" type="checkbox" id="check1" checked><label for="check1"></label><p>아이디 기억하기</p></li>
+		<li><input class="checkBox" type="checkbox" id="check2" ><label for="check2"></label><p>SSO</p></li>
+	</ul>
+	
+		<button class="btn-login"><p>로그인</p></button>
+		<button class="btn-refresh">비밀번호초기화</button>
+	</div>
+	 </section>
+	 </main>
+ 	 </div>
+ 	 
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.ModelMapper">
+
+    <select id="selectModelFile" parameterType="ModelDTO" resultType="ModelDTO">
+	
+		SELECT DISTINCT  E.FILE_NM  AS FILE_NM ,E.FILE_NM_ORI 
+		FROM tb_kc_dwg_mst A
+			, tb_kc_dwg_tag B
+			, tb_kc_dwg_mst_model c
+			, tb_kc_model d
+			left join tb_kc_atch_file e on (d.file_DTDX = e.file_id)
+		WHERE A.DWG_SEQ = B.DWG_SEQ
+			and a.dwg_seq = c.dwg_seq
+			AND c.M_SEQ = d.M_SEQ
+			AND
+		<foreach item="item" collection="idLvlList" index="index" open="(" separator="OR" close=")" >
+		  <if test='item.lvl == "3"'>
+			 A.DWG_BUILDING = #{item.id}
+			</if>
+			<if test='item.lvl == "4"'>
+			A.DWG_LEVEL = #{item.id}
+			</if>
+			<if test='item.lvl == "5"'>
+			B.TAG_SEQ  = #{item.id}
+			</if>
+			<if test='item.lvl == "999"'>
+			A.DWG_SEQ = #{item.id}
+			</if>
+		</foreach>	
+    </select>
+
+</mapper>

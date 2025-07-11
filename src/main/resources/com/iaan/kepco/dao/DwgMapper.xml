@@ -1,0 +1,715 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.DwgMapper">
+    <select id="selectDwgLoad" parameterType="DwgDTO" resultType="HierarchyDTO">
+    SELECT DISTINCT B.TAG_SEQ as H_SEQ
+		,B.TAG_NM as HIERARCHY_NM
+	FROM tb_kc_dwg_mst A
+		, tb_kc_dwg_tag B
+	WHERE A.DWG_SEQ = B.DWG_SEQ
+		AND
+	<foreach item="item" collection="idLvlList" index="index" open="(" separator="OR" close=")" >
+		  <if test='item.lvl == "3"'>
+			 A.DWG_BUILDING = #{item.id}
+			</if>
+			<if test='item.lvl == "4"'>
+			A.DWG_LEVEL = #{item.id}
+			</if>
+			<if test='item.lvl == "5"'>
+			B.TAG_SEQ = #{item.id}
+			</if>
+			<if test='item.lvl == "999"'>
+			A.DWG_SEQ = #{item.id}
+			</if>
+	</foreach>	
+	</select>
+
+    <select id="selectDwgFileList" parameterType="DwgDTO" resultType="DwgDTO">
+    	SELECT DISTINCT C.FILE_NM AS DWG_NUM
+			,C.FILE_NM_ORI AS DWG_FILE_NM
+			,E.FILE_NM_ORI AS SVG_FILE_NM
+		 	,F.FILE_NM  AS JSON_FILE_NM
+		    ,F.FILE_NM_ORI  AS JSON_FILE_NM_ORI
+		
+		FROM tb_kc_dwg_mst A
+			LEFT JOIN  tb_kc_atch_file c ON (A.FILE_DWG = C.FILE_ID)
+			LEFT JOIN  tb_kc_atch_file d ON (A.FILE_AE = D.FILE_ID)
+			LEFT JOIN  tb_kc_atch_file e ON (A.FILE_SVG = E.FILE_ID)
+			LEFT JOIN  tb_kc_atch_file f ON (A.FILE_JSON = F.FILE_ID)
+			, tb_kc_dwg_tag B
+		WHERE A.DWG_SEQ = B.DWG_SEQ
+			AND F.FILE_NM IS NOT NULL
+			AND
+		<foreach item="item" collection="idLvlList" index="index" open="(" separator="OR" close=")" >
+		  <if test='item.lvl == "3"'>
+			 A.DWG_BUILDING = #{item.id}
+			</if>
+			<if test='item.lvl == "4"'>
+			A.DWG_LEVEL = #{item.id}
+			</if>
+			<if test='item.lvl == "5"'>
+			B.TAG_SEQ = #{item.id}
+			</if>
+			<if test='item.lvl == "999"'>
+			A.DWG_SEQ = #{item.id}
+			</if>
+		</foreach>	
+    </select>
+
+    
+
+    <insert id="insertDwg" parameterType="DwgDTO" useGeneratedKeys="true" keyProperty="dwgSeq" keyColumn="DWG_SEQ">
+    	INSERT INTO tb_kc_dwg (DWG_NUM, W_CD, AE_FILE_NM, USE_YN, REG_ID, MOD_ID)
+			VALUES(#{dwgNum}, #{wCd}, #{aeFileNm}, 'Y', #{regId}, #{modId})
+    </insert>
+
+    <update id="updateDwg" parameterType="DwgDTO">
+    	UPDATE	tb_kc_dwg
+    		SET	MOD_ID = #{modId}
+    			, MOD_DATE = NOW()
+    		<if test='dwgNum != null and dwgNum != ""'>
+				, DWG_NUM = #{dwgNum}
+			</if>
+    		<if test='wCd != null and wCd != ""'>
+				, W_CD = #{wCd}
+			</if>
+			<if test='aeFileNm != null and aeFileNm != ""'>
+				, AE_FILE_NM = #{aeFileNm}
+			</if>
+		WHERE	DWG_SEQ = #{dwgSeq}
+    </update>
+    <select id="selectAutoCadDwgList" parameterType="Map" resultType="DwgMstDTO">
+     	SELECT A.DWG_SEQ
+		      ,A.DWG_PLANT
+		      ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) DWG_PLANT_NM
+			  ,A.DWG_UNIT  
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) DWG_UNIT_NM
+			  ,A.DWG_BUILDING  
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) DWG_BUILDING_NM
+			  ,A.DWG_LEVEL  
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL AND CD_GROUP = A.DWG_BUILDING ) DWG_LEVEL_NM
+			  ,A.W_CD
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.W_CD AND CD_GROUP = '011' ) W_CD_NM
+			  ,GROUP_CONCAT(B.TAG_NM) AS TAG_NM
+			  ,DATE_FORMAT(A.REG_DATE, '%Y-%m-%d %T' ) REG_DATE
+			  ,A.STATUS
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.STATUS AND CD_GROUP = '001' ) STATUS_NM
+			  ,A.ACTION_DEADLINE
+			  ,A.FILE_DWG
+			  ,A.FILE_AE
+			  ,A.FILE_SVG
+			  ,A.FILE_JSON
+			  ,A.DWG_FILE_NM
+			  ,A.DWG_FILE_AE_NM
+			  ,A.SVG_FILE_NM
+			  ,A.JSON_FILE_NM
+			  ,A.ACTION_DATE
+			  ,A.ACTION_DATE3
+			  ,a.ACTION_OPINION
+			  ,a.EXAMINATION_OPINION
+			  ,a.ACTION_OPINION3
+			  ,a.EXAMINATION_OPINION3
+		FROM tb_kc_dwg_mst A
+			, tb_kc_dwg_tag B
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+		    	<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  A.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  A.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  A.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  A.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+				<if test='dwgPbs != null and dwgPbs != ""'>
+				 AND A.DWG_PBS  = #{dwgPbs}
+				</if>
+		GROUP BY A.DWG_SEQ
+		      	,A.DWG_PLANT
+		      	,A.DWG_UNIT
+			  	,A.DWG_BUILDING  
+			  	,A.REG_DATE
+				,A.STATUS
+				,A.DWG_LEVEL
+				,A.ACTION_DEADLINE
+			  	,A.FILE_DWG
+			  	,A.FILE_AE
+			  	,A.FILE_SVG
+			  	,A.FILE_JSON
+			  	,A.DWG_FILE_NM
+			  	,A.DWG_FILE_AE_NM
+			  	,A.SVG_FILE_NM
+			  	,A.JSON_FILE_NM
+			  	,A.W_CD
+		ORDER BY A.DWG_BUILDING 
+    </select>
+    
+    
+    <select id="selectArVrDwgList" parameterType="Map" resultType="DwgMstDTO">
+     	SELECT A.DWG_SEQ
+		      ,A.DWG_PLANT
+		      ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) DWG_PLANT_NM
+			  ,A.DWG_UNIT  
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) DWG_UNIT_NM
+			  ,A.DWG_BUILDING  
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) DWG_BUILDING_NM
+			  ,A.DWG_LEVEL  
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL AND CD_GROUP = A.DWG_BUILDING ) DWG_LEVEL_NM
+			  ,B.TAG_NM
+			  ,DATE_FORMAT(A.REG_DATE, '%Y-%m-%d %T' ) REG_DATE
+			  ,A.STATUS
+			  ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.STATUS AND CD_GROUP = '001' ) STATUS_NM
+			  ,A.ACTION_DEADLINE
+			  ,A.FILE_DWG
+			  ,A.FILE_AE
+			  ,A.FILE_SVG
+			  ,A.FILE_JSON
+			  ,A.DWG_FILE_NM
+			  ,A.DWG_FILE_AE_NM
+			  ,A.SVG_FILE_NM
+			  ,A.JSON_FILE_NM
+		FROM tb_kc_dwg_mst A
+			, tb_kc_dwg_tag B
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+		    	<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  A.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  A.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  A.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  A.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+				<if test='dwgPbs != null and dwgPbs != ""'>
+				 AND A.DWG_PBS  = #{dwgPbs}
+				</if>
+		ORDER BY A.DWG_BUILDING , B.TAG_SEQ
+    </select>
+    
+    <select id="selectDtdxFileList" parameterType="Map" resultType="DtdxFileDTO">
+    
+    	SELECT DISTINCT C.FILE_NM_ORI AS FILE_NM
+		 	,A.FILE_DTDX AS FILE_ID
+		 	,A.DWG_SEQ
+		 	,B.TAG_SEQ
+		 	,B.TAG_NM
+		FROM tb_kc_dwg_mst A
+			LEFT JOIN  tb_kc_atch_file C ON (A.FILE_DTDX = C.FILE_ID)
+			, tb_kc_dwg_tag B
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+			AND A.FILE_DTDX IS NOT NULL
+			<if test='dwgPlant != null and dwgPlant != ""'>
+			 AND  A.DWG_PLANT = #{dwgPlant}
+			</if>
+			<if test='dwgUnit != null and dwgUnit != ""'>
+			 AND  A.DWG_Unit = #{dwgUnit}
+			</if>
+			<if test='dwgBuilding != null and dwgBuilding != ""'>
+			 AND  A.DWG_BUILDING = #{dwgBuilding}
+			</if>
+			<if test='dwgLevel != null and dwgLevel != ""'>
+			 AND  A.DWG_LEVEL = #{dwgLevel}
+			</if>
+			<if test='tagNm != null and tagNm != ""'>
+			 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+			</if>
+		UNION ALL
+		SELECT DISTINCT  e.FILE_NM_ORI,e.file_id
+			,A.DWG_SEQ
+		 	,B.TAG_SEQ
+		 	,B.TAG_NM
+		FROM tb_kc_dwg_mst A
+			, tb_kc_dwg_tag B
+			, tb_kc_dwg_mst_model c
+			, tb_kc_model d
+			LEFT JOIN  tb_kc_atch_file e ON (d.FILE_DTDX = e.FILE_ID)
+		WHERE A.DWG_SEQ = B.DWG_SEQ
+			and a.dwg_seq = c.dwg_seq
+			and c.M_SEQ = d.M_SEQ
+			AND D.FILE_DTDX IS NOT NULL
+			<if test='dwgPlant != null and dwgPlant != ""'>
+			 AND  A.DWG_PLANT = #{dwgPlant}
+			</if>
+			<if test='dwgUnit != null and dwgUnit != ""'>
+			 AND  A.DWG_Unit = #{dwgUnit}
+			</if>
+			<if test='dwgBuilding != null and dwgBuilding != ""'>
+			 AND  A.DWG_BUILDING = #{dwgBuilding}
+			</if>
+			<if test='dwgLevel != null and dwgLevel != ""'>
+			 AND  A.DWG_LEVEL = #{dwgLevel}
+			</if>
+			<if test='tagNm != null and tagNm != ""'>
+			 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+			</if>
+   </select>
+   
+   
+   
+   
+   <select id="selectHololensDtdxFileList" parameterType="Map" resultType="DtdxFileDTO">
+    
+    	SELECT DISTINCT C.FILE_NM_ORI AS FILE_NM
+		 	,A.FILE_DTDX AS FILE_ID
+		 	,A.DWG_SEQ
+		 	,B.TAG_SEQ
+		 	,B.TAG_NM
+		FROM tb_kc_dwg_mst A
+			LEFT JOIN  tb_kc_atch_file C ON (A.FILE_DTDX = C.FILE_ID)
+			, tb_kc_dwg_tag B
+		WHERE  A.DWG_SEQ = B.DWG_SEQ
+			AND A.FILE_DTDX IS NOT NULL
+			<if test='dwgPlant != null and dwgPlant != ""'>
+			 AND  A.DWG_PLANT = #{dwgPlant}
+			</if>
+			<if test='dwgUnit != null and dwgUnit != ""'>
+			 AND  A.DWG_Unit = #{dwgUnit}
+			</if>
+			<if test='dwgBuilding != null and dwgBuilding != ""'>
+			 AND  A.DWG_BUILDING = #{dwgBuilding}
+			</if>
+			<if test='dwgLevel != null and dwgLevel != ""'>
+			 AND  A.DWG_LEVEL = #{dwgLevel}
+			</if>
+			<if test='tagNm != null and tagNm != ""'>
+			 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+			</if>
+		UNION ALL
+		SELECT DISTINCT  e.FILE_NM_ORI
+		    ,CASE WHEN F.FILE_ID IS NULL THEN e.file_id ELSE F.FILE_ID END FILE_ID
+			,A.DWG_SEQ
+		 	,B.TAG_SEQ
+		 	,B.TAG_NM
+		FROM tb_kc_dwg_mst A
+			, tb_kc_dwg_tag B
+			, tb_kc_dwg_mst_model c
+			, tb_kc_model d
+			LEFT JOIN  tb_kc_atch_file e ON (d.FILE_DTDX = e.FILE_ID)
+			LEFT JOIN  tb_kc_atch_file f ON (d.FILE_HDTDX = f.FILE_ID)
+		WHERE A.DWG_SEQ = B.DWG_SEQ
+			and a.dwg_seq = c.dwg_seq
+			and c.M_SEQ = d.M_SEQ
+			AND D.FILE_DTDX IS NOT NULL
+			<if test='dwgPlant != null and dwgPlant != ""'>
+			 AND  A.DWG_PLANT = #{dwgPlant}
+			</if>
+			<if test='dwgUnit != null and dwgUnit != ""'>
+			 AND  A.DWG_Unit = #{dwgUnit}
+			</if>
+			<if test='dwgBuilding != null and dwgBuilding != ""'>
+			 AND  A.DWG_BUILDING = #{dwgBuilding}
+			</if>
+			<if test='dwgLevel != null and dwgLevel != ""'>
+			 AND  A.DWG_LEVEL = #{dwgLevel}
+			</if>
+			<if test='tagNm != null and tagNm != ""'>
+			 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+			</if>
+   </select>
+   
+   <select id="selectPassTag" parameterType="Map" resultType="PassTagDTO">
+      	SELECT 
+		   B.DWG_SEQ,SUBSTRING_INDEX(A.DWG_FILE_NM, '.', 1)  AS DWG_FILE_NM , B.PASS_TAG
+		FROM tb_kc_dwg_mst A
+		    ,tb_kc_dwg_pass_tag B
+		WHERE A.DWG_SEQ  = B.DWG_SEQ
+		    <if test='dwgSeq != null and dwgSeq != ""'>
+			 AND  A.DWG_SEQ = #{dwgSeq}
+			</if>
+			<if test='dwgFileNm != null and dwgFileNm != ""'>
+			 AND  SUBSTRING_INDEX(A.DWG_FILE_NM, '.', 1) = #{dwgFileNm}
+			</if>
+		ORDER BY B.PASS_SEQ
+	</select>
+   
+   
+   	<select id="selectQualityList" parameterType="Map" resultType="QualityDTO">
+       	SELECT 
+		   SEQ_NO ,quality 
+		FROM tb_kc_quality
+	</select>
+	
+	<select id="selectSysmbolList" parameterType="Map" resultType="SymbolDTO">
+       	SELECT   D.SYMBOL_SEQ
+				,d.SYMBOL_TYPE
+				,SUBSTRING_INDEX(A.DWG_FILE_NM, '.', 1) dwg_file_nm
+				,d.SYMBOL_OD
+		FROM tb_kc_dwg_mst a
+			  ,tb_kc_symbol_mst D
+			 
+		WHERE 1=1
+			<if test='dwgSeq != null and dwgSeq != ""'>
+			 AND  A.DWG_SEQ = #{dwgSeq}
+			</if>
+			<if test='dwgFileNm != null and dwgFileNm != ""'>
+			 AND  SUBSTRING_INDEX(A.DWG_FILE_NM, '.', 1) = #{dwgFileNm}
+			</if> 
+	
+	</select>
+	
+	
+	
+	
+	<select id="selectActualList" parameterType="Map" resultType="DwgMstDTO">
+    	SELECT A.DWG_SEQ
+		 	,A.FILE_DTDX 
+		 	,D.FILE_NM_ORI
+			,B.TAG_SEQ
+			,B.TAG_NM 
+			,E.HANDLE
+		
+		FROM  tb_kc_dwg_mst A
+			LEFT JOIN  tb_kc_atch_file D ON (A.FILE_DTDX = D.FILE_ID)
+			, tb_kc_dwg_tag B
+			, tb_kc_wbs_actual c
+			, tb_kc_json_symbol E
+		WHERE A.DWG_SEQ = B.DWG_SEQ
+			and b.tag_seq = c.tag_seq
+			AND B.DWG_SEQ = E.DWG_SEQ
+			AND B.TAG_SEQ = E.TAG_SEQ
+			AND c.TAG_SEQ = E.TAG_SEQ
+			AND C.HANDLE = E.HANDLE
+			<if test='dwgPlant != null and dwgPlant != ""'>
+			 AND  A.DWG_PLANT = #{dwgPlant}
+			</if>
+			<if test='dwgUnit != null and dwgUnit != ""'>
+			 AND  A.DWG_Unit = #{dwgUnit}
+			</if>
+			<if test='dwgBuilding != null and dwgBuilding != ""'>
+			 AND  A.DWG_BUILDING = #{dwgBuilding}
+			</if>
+			<if test='dwgLevel != null and dwgLevel != ""'>
+			 AND  A.DWG_LEVEL = #{dwgLevel}
+			</if>
+			<if test='tagNm != null and tagNm != ""'>
+			 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+			</if>					
+	</select>
+	
+	
+	<insert id="insertActual" parameterType="Map" >
+    	<selectKey keyProperty="actualSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(ACTUAL_SEQ), 0) + 1 FROM tb_kc_wbs_actual
+    	</selectKey>
+    	insert into tb_kc_wbs_actual(
+    		 TAG_SEQ
+    		,ACTUAL_SEQ
+    		,ACTUAL_QUANTITY
+    		,BUILD_CONTENTS
+    		,HANDLE
+    		,REG_ID
+    		,REG_DATE
+    	)VALUES(
+    	   (SELECT TAG_SEQ FROM tb_kc_json_symbol WHERE DWG_SEQ  = #{dwgSeq} AND HANDLE = #{handle})
+    	   ,#{actualSeq}
+    	   ,1
+    	   ,#{buildCoontents}
+    	   ,#{handle}
+    	   ,#{regId}
+    	   ,NOW()
+    	) ;
+    	
+    	update tb_kc_wbs set ACTUAL_QUANTITY = (select sum(ACTUAL_QUANTITY) from tb_kc_wbs_actual where tag_seq = (SELECT TAG_SEQ FROM tb_kc_json_symbol WHERE DWG_SEQ  = #{dwgSeq} AND HANDLE = #{handle}) )
+    	where tag_seq = (SELECT TAG_SEQ FROM tb_kc_json_symbol WHERE DWG_SEQ  = #{dwgSeq} AND HANDLE = #{handle}) ;
+    	
+	</insert>
+	
+
+
+	
+	<select id="selectBookMarkMstList" parameterType="BookMarkDTO" resultType="BookMarkDTO">
+    	
+    	WITH TEMPTAG AS(
+    	
+	    	SELECT A.TITLE
+			 	,A.BOOKMARK_SEQ 
+			 	,GROUP_CONCAT(B.TAG_SEQ  ORDER BY B.TAG_SEQ )  AS TAG_NUM
+			FROM  tb_kc_bookmark_mst A
+				, tb_kc_bookmark_tag b
+			WHERE a.BOOKMARK_SEQ = b.BOOKMARK_SEQ
+				<if test='bookmarkSeq != null and bookmarkSeq != ""'>
+				 AND  A.BOOKMARK_SEQ = #{bookmarkSeq}
+				</if>
+			GROUP BY A.BOOKMARK_SEQ,A.TITLE
+		)
+		SELECT * FROM TEMPTAG
+		WHERE #{tagNum}  LIKE CONCAT('%',TAG_NUM ,'%')
+					
+	</select>
+	
+	
+	
+	
+	<insert id="insertBookMarkMst" parameterType="BookMarkDTO" >
+		<selectKey keyProperty="bookmarkSeq" resultType="int" order="BEFORE">
+      		<choose>
+			  <when test='bookmarkSeq != null and bookmarkSeq != ""'>
+			  	SELECT #{bookmarkSeq}
+			  </when>
+			  <otherwise>
+			    SELECT IFNULL(MAX(bookmark_seq), 0) + 1 FROM tb_kc_bookmark_mst
+			  </otherwise>
+			</choose>	
+		</selectKey>   
+    	
+    	INSERT INTO tb_kc_bookmark_mst(
+    		bookmark_seq
+    		,TITLE
+    		,REG_ID
+    		,REG_DATE
+    	)VALUES(
+    	#{bookmarkSeq}
+    	,#{title}
+    	,#{regId}
+    	,NOW()
+    	)
+    	ON DUPLICATE KEY UPDATE
+    		 TITLE = #{title}
+	        , REG_ID = #{regId}
+	</insert>
+	
+	
+	
+	
+	<insert id="insertBookMarkTag" parameterType="BookMarkDTO" >
+		INSERT INTO tb_kc_bookmark_tag(
+    		bookmark_seq
+    		,TAG_SEQ
+    		,REG_ID
+    		,REG_DATE
+    	)VALUES(
+    	#{bookmarkSeq}
+    	,#{tagSeq}
+    	,#{regId}
+    	,NOW()
+    	)
+	</insert>
+	
+	
+	
+	
+	<insert id="insertBookMarkDesc" parameterType="BookMarkDTO" >
+    	<selectKey keyProperty="sequenceId" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(sequence_id)+1, 0)  FROM tb_kc_bookmark_Desc where bookmark_seq = #{bookmarkSeq}     
+    	</selectKey>
+    	INSERT INTO tb_kc_bookmark_Desc(
+    		bookmark_seq            
+			,sequence_id             
+			,animate_Delay           
+			,animate_Speed           
+			,camera_Position         
+			,camera_Rotation         
+			,camera_Target           
+			,REG_ID                  
+			,REG_DATE     
+    	)VALUES(
+	    	#{bookmarkSeq}         
+	    	,#{sequenceId}             
+	    	,#{animateDelay}           
+	    	,#{animateSpeed}           
+	    	,#{cameraPosition}         
+	    	,#{cameraRotation}         
+	    	,#{cameraTarget}           
+	    	,#{regId}                  
+			,NOW()        
+    	)
+	</insert>
+	
+	
+	
+	<delete id="deleteBookMarkMst" parameterType="String" >
+		delete from tb_kc_bookmark_mst 
+    	where 	bookmark_seq =#{bookmarkSeq};
+    	
+    	delete from tb_kc_bookmark_Desc 
+    	where 	bookmark_seq =#{bookmarkSeq};
+    </delete>
+
+	<delete id="deleteBookMarkdesc" parameterType="Map" >
+		
+    	delete from tb_kc_bookmark_Desc 
+    	where 	bookmark_seq =#{bookmarkSeq}
+    		and sequence_id = #{sequenceId}
+    </delete>
+
+
+	
+	<select id="selectBookMarkDescList" parameterType="BookMarkDTO" resultType="BookMarkDTO">
+    	SELECT *
+		FROM  tb_kc_bookmark_desc 
+		WHERE BOOKMARK_SEQ = #{bookmarkSeq}
+	</select>
+	
+	
+	<select id="selectBookMarkLoadDescList" parameterType="BookMarkDTO" resultType="BookMarkDescDTO">
+    	SELECT sequence_id
+    		,animate_Delay
+    		,animate_Speed
+    		
+    		,REPLACE(camera_position, '\\', '') camera_Position
+    		,camera_Rotation
+    		,camera_Target
+		FROM  tb_kc_bookmark_desc 
+		WHERE BOOKMARK_SEQ = #{bookmarkSeq}
+	</select>
+	
+	<select id="selectHandleList" parameterType="Map" resultType="DwgMstDTO">
+    	SELECT A.HANDLE
+		FROM  tb_kc_json_symbol A
+		WHERE dwg_seq = #{dwgSeq}
+	</select>
+	
+	<select id="selectMarkUpList" parameterType="Map" resultType="MarkupDTO">
+    	SELECT *
+		FROM  tb_kc_markup 
+		WHERE reg_id = #{regId}
+	</select>
+	
+	<delete id="deleteMarkUp" parameterType="Map" >
+    	delete
+		FROM  tb_kc_markup 
+		WHERE base64Screenshot = #{base}
+	</delete>
+	<!-- <select id="selectSymbolMstList" parameterType="Map" resultType="SymbolDTO">
+    	SELECT SYMBOL_SEQ,SYMBOL_TYPE,SYMBOL_OD,FILE_NM
+		FROM  tb_kc_symbol_mst 
+	
+	</select> -->
+	
+	
+	
+	<select id="selectHandleForTagCnt" parameterType="Map" resultType="int">
+       SELECT count(TAG_SEQ) cnt FROM tb_kc_json_symbol WHERE DWG_SEQ  = #{dwgSeq} AND HANDLE = #{handle} ;
+    	
+	</select>
+	
+	<select id="selectSymbolMstALLList" parameterType="Map" resultType="SymbolDTO">
+	
+	       SELECT SYMBOL_SEQ    
+				,SYMBOL_TYPE   
+				,SYMBOL_OD     
+				,FILE_NM       
+				,FILE_PATH
+				,REG_ID        
+				,REG_DATE       
+			FROM TB_KC_SYMBOL_MST
+		
+			
+    </select>
+    <select id="selectSymbolMstList" parameterType="SearchDTO" resultType="SymbolDTO">
+	SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+		FROM	(
+	       SELECT SYMBOL_SEQ    
+				,SYMBOL_TYPE   
+				,SYMBOL_OD     
+				,FILE_NM     
+				,FILE_PATH  
+				,REG_ID        
+				,REG_DATE       
+			FROM TB_KC_SYMBOL_MST
+			WHERE 1=1
+				<if test='symbolType != null and symbolType != ""'> 
+			  	AND SYMBOL_TYPE  like concat('%', #{symbolType},'%')
+			  	</if>
+			  	<if test='symbolSeq != null and symbolSeq != ""'> 
+			  	AND SYMBOL_SEQ =  #{symbolSeq} 
+			  	</if>
+			 )TEMP
+		,(SELECT @ROWNUM:=0) AS R
+		ORDER BY ROWNUM
+		LIMIT #{startRowNum}, #{pageSize}
+    </select>
+    
+    <select id="selectSymbolMstListCnt" parameterType="SearchDTO" resultType="SearchDTO">
+	       SELECT count(*) AS TOTAL_DATA_CNT
+			FROM TB_KC_SYMBOL_MST
+			WHERE 1=1
+				<if test='symbolType != null and symbolType != ""'> 
+			  	AND SYMBOL_TYPE  = #{symbolType}
+			  	</if>
+			  	<if test='symbolSeq != null and symbolSeq != ""'> 
+			  	AND SYMBOL_SEQ =  #{symbolSeq} 
+			  	</if>
+	
+    </select>
+    
+    <insert id="insertSymbolMst" parameterType="SymbolDTO" >
+    	<selectKey keyProperty="symbolSeq" resultType="int" order="BEFORE">
+      		<choose>
+			  <when test='symbolSeq != null'>
+			  	SELECT #{symbolSeq}
+			  </when>
+			  <otherwise>
+			    SELECT IFNULL(MAX(SYMBOL_SEQ), 0) + 1 FROM TB_KC_SYMBOL_MST
+			  </otherwise>
+			</choose>	
+		</selectKey>   
+    	INSERT INTO TB_KC_SYMBOL_MST(
+    		 SYMBOL_SEQ    
+			,SYMBOL_TYPE   
+			,SYMBOL_OD     
+			,FILE_NM       
+			,FILE_PATH
+			,REG_ID        
+			,REG_DATE     
+    	)VALUES(
+	    	 #{symbolSeq}    
+			,#{symbolType}    
+			,#{symbolOd}      
+			,#{fileNm}   
+			,#{filePath}        
+			,#{regId}        
+			,NOW()   
+    	)ON DUPLICATE KEY UPDATE
+    		 SYMBOL_TYPE  =#{symbolType} 
+			,SYMBOL_OD  = #{symbolOd}  
+			,FILE_NM   =  #{fileNm}   
+			,FILE_PATH = #{filePath} 
+			,REG_ID    =  #{regId}   
+			,REG_DATE  = NOW() ;
+			
+		INSERT INTO TH_KC_SYMBOL_MST(
+    		 SYMBOL_SEQ    
+			,SYMBOL_TYPE   
+			,SYMBOL_OD     
+			,FILE_NM   
+			,FILE_PATH    
+			,REG_ID        
+			,REG_DATE     
+    	)VALUES(
+	    	 #{symbolSeq}    
+			,#{symbolType}    
+			,#{symbolOd}      
+			,#{fileNm}    
+			,#{filePath}     
+			,#{regId}        
+			,NOW()   
+    	);	
+			
+	</insert>
+	
+	
+	<delete id="deleteSymbolMst" parameterType="SymbolDTO" >
+    	
+    	DELETE FROM TB_KC_SYMBOL_MST
+		WHERE SYMBOL_SEQ =  	 #{symbolSeq}    
+			 
+	</delete>
+			
+			
+</mapper>
+
+

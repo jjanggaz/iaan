@@ -1,0 +1,172 @@
+@font-face {
+    font-family: 'NotoSansKR';
+    src: url('../fonts/NotoSansKR-Regular.ttf');
+}
+
+.user-control-panel-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    font-family: 'NotoSansKR', sans-serif;
+    overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.user-control-panel-container .room-info-container {
+    position: absolute;
+    left: 10px;
+    top: 0px;
+    width: 120px;
+    height: 40px;
+    font-size: 14px;
+    color: white;
+    line-height: 40px;
+}
+
+.user-control-panel-container .room-info-container .player-list-text {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80px;
+    height: 100%;
+    text-align: center;
+}
+
+.user-control-panel-container .room-info-container .buddy-img {
+    position: absolute;
+    left: 80px;
+    top: 50%;
+    width: 15px;
+    height: 15px;
+    transform: translateY(-50%);
+    filter: brightness(0) invert(1);
+}
+
+.user-control-panel-container .room-info-container .user-count-text {
+    position: absolute;
+    left: 98px;
+    top: 0;
+    width: 15px;
+    height: 100%;
+    text-align: left;
+}
+
+.user-control-panel-container .user-list-container {
+    position: absolute;
+    left: 10px;
+    top: 40px;
+    width: calc(100% - 20px);
+    height: calc(100% - 50px);
+}
+
+.user-control-panel-container .user-list-container .user-container {
+    position: absolute;
+    width: 200px;
+    height: 140px;
+    background: rgb(58, 64, 84);
+}
+
+.user-control-panel-container .user-list-container .remote-user-list-container {
+    position: absolute;
+    left: 230px;
+    top: 5px;
+    width: calc(100% - 230px);
+    height: 144px;
+    background: transparent;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    /* gap: 5px; */
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.user-control-panel-container .user-list-container .remote-user-list-container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.user-control-panel-container .user-list-container .remote-user-list-container::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background: #636772;
+}
+
+.user-control-panel-container .user-list-container .remote-user-list-container::-webkit-scrollbar-track {
+    width: 4px;
+    height: 10px;
+    background: #30343f;
+}
+
+.user-control-panel-container .user-list-container .remote-user-list-container .user-container {
+    position: relative;
+    width: 200px;
+    height: 140px;
+    min-width: 200px;
+    max-width: 140px;
+    margin-right: 10px;
+}
+
+.user-control-panel-container .user-list-container .remote-user-list-container .user-container:last-child {
+    position: relative;
+    width: 200px;
+    height: 140px;
+    min-width: 200px;
+    max-width: 140px;
+    margin-right: 0px;
+}
+
+.user-container .user-name-text {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    padding: 0;
+    font-size: 12px;
+    color: white;
+    white-space: nowrap;
+    background: black;
+}
+
+.user-rtc-video {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgb(58, 64, 84);
+    object-fit: cover;
+}
+
+.user-rtc-video-poster {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+}
+
+.user-container .user-control-button-container {
+    position: absolute;
+    right: 40px;
+    bottom: 5px;
+    width: 65px;
+    height: 30px;
+    gap: 10px;
+    border: none;
+}
+
+.user-container .user-control-button-container .user-control-button {
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+    cursor: pointer;
+}

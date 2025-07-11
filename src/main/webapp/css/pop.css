@@ -1,0 +1,893 @@
+.wrap-pop.on {
+    z-index: 9999;
+    pointer-events: all;
+    opacity: 1;
+
+}
+.wrap-pop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 20px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0;
+    transition: all 0.3s ease-in-out;
+
+}
+.markupSave{
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    gap: 15px;
+    padding-top:20px;
+    font-size: 14px;
+    }
+
+
+.markupSave >label{
+	color:white;
+    }
+
+
+div.markupSave >input{
+    background: #CECFD2;
+    color: black;
+    border-radius:5px;
+    }
+  div.markupSave > input::placeholder {
+    color: #959595; /* placeholder 텍스트 색상 */
+    font-style: italic; /* placeholder 텍스트 스타일 */
+    font-style: oblique;
+    font-weight:bold;
+  }
+
+
+.wrap-pop > [class*="pop-"]:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: #5050509c;
+    box-shadow: inset 0 0 53px rgb(223 223 223 / 70%);
+    filter: invert(1);
+          opacity: 0.2;
+    z-index: -1;
+}
+.wrap-pop [class*="pop-"] > .btn-close:before {
+    transform: translate(-50%, -50%) rotate(45deg);
+}
+.wrap-pop [class*="pop-"] > .btn-close:before, .wrap-pop [class*="pop-"] > .btn-close:after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1px;
+    height: 33px;
+    background: #ffffff;
+}
+.wrap-pop [class*="pop-"] > .btn-close {
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: 0 none;
+    cursor: pointer;
+    pointer-events: all;
+}
+
+
+div.wrap-pop.popPlan .pop-basic{
+  width: 1204px;
+}
+
+.pop-basic {
+  flex-direction: column;
+  position: absolute;
+/*     width: 467px; */
+ /*  margin: 109px 636px 0 503px;*/
+   max-height: calc(100% - 40px);
+   border-radius: 5px;
+   box-shadow: 0 10px 40px 0 rgba(0, 0, 0, 0.3);
+   background-color: #3a4054;
+   display: none;
+   flex-direction: column;
+}
+
+
+
+
+.pop-basic.on {
+   display: flex;
+}
+
+.pop-basic .floor-title .line-title {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  height: 32px;
+  background-color: #151b33;
+  color: white;
+  align-content: center;
+  flex-wrap: wrap;
+  font-family: SystemFont;
+  font-size: 14px;
+}
+
+[readOnly='readOnly']{
+ height: auto!important;
+ padding: 0!important;
+ background: transparent!important;
+ color: white!important;
+ pointer-events: none;
+ margin: auto 0!important;
+
+}
+
+
+.wrap-pop .floor-conts {
+  overflow-y: auto;
+  padding:20px 23px 0;
+}
+
+.wrap-pop .floor-conts::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+.wrap-pop .floor-conts::-webkit-scrollbar-thumb {
+  width: 4px;
+  height: 4px;
+  border-radius: 2px;
+  background: #636772;
+}
+
+
+.pop-basic.on.checkIssue div.floor-conts.customScrollbar {
+	padding:0 ;
+}
+
+.pop-basic .floor-conts .area-conts {
+  padding: 10px;
+  color: #d4d4d4;
+}
+
+
+div.area-conts>section>div.grid-pop.column2>dl{
+	display:flex;
+}
+
+div.area-conts > section div.grid-pop.column2 > dl dt+dd {
+   	align-self:center;
+
+}
+div.area-conts>section>div.grid-pop.column2  dt{
+align-self:center; }
+
+
+
+
+   .unit-form input[type="date"]::-webkit-calendar-picker-indicator {
+  /* display: none; */
+  border: #262c46;
+  text-align: end;
+  justify-items: center;
+  height: 50px;
+  width: 180px;
+  line-height: 20px;
+  height: 36px;
+  position: absolute;
+}
+
+section div.grid-pop  textarea{
+ border-radius: 2px;
+ background-color: #fff;
+ width: 343px;
+ height: 91px;
+ padding: 7px 0 0 12px;
+ 	}
+section div.grid-pop  textarea::placeholder{
+ 	color:black;
+}
+
+
+div.area-conts > section  div.grid-pop.column2 > dl:first-child dt:first-child+dd{
+ -webkit-text-stroke: 0.5px #d4d4d4;
+ }
+
+
+
+div.area-conts > section:nth-of-type(2)  div.grid-pop.column2 > dl:first-child dd{
+color:#eb3d73;
+-webkit-text-stroke: 1px #eb3d73;
+ }
+
+
+.pop-devideLine{
+ width: 100%;
+ height: 0.5px;
+ background: #585e72;
+ margin: 20px 0;
+}
+
+div.area-conts>section>div.grid-pop.column2>dl,
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo{
+ text-align: left;
+ color: #d4d4d4;
+ font-size:13px;
+ font-family: SystemFont;
+ display: grid;
+ gap: 11px;
+ grid-template-columns: repeat(2, 55px 1fr);
+ grid-template-rows: 30px 30px 50px 30px;
+ width: 100%;
+ }
+
+ div.wrap-pop checkIssue div.area-conts>section>div.grid-pop.column2>dl{
+
+  grid-template-columns: repeat(2, 70px 1fr);}
+
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo{
+
+  grid-template-columns: 60px 1fr;
+  display: grid;
+  /* grid-template-rows: 58px  395px ; */
+    grid-template-rows: minmax(58px, auto) 1fr;
+     }
+
+
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo:nth-of-type(2) {
+grid-template-rows: repeat(2, auto);
+row-gap:0;
+}
+
+
+div.area-conts section.wrap-issueInfo:nth-of-type(2) dl.grid-pop.issueInfo dd:nth-of-type(1) {
+    margin-bottom: 16px;
+}
+
+
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo dd div.comment,
+ul.list-comment >li.view-comment .re-comment {
+display:flex;
+flex-direction:row;
+gap:10px;
+align-items:center;
+width:100%;
+}
+
+
+
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo dd div.comment, ul.list-comment >li.view-comment .re-comment {
+ 	width:auto;
+}
+
+/* ul.list-comment >li.view-comment .re-comment {
+    justify-content: flex-end;
+}
+ */
+
+ul.re-comment > li ul[class^="re-comment"]{
+	margin-left:20px;
+}
+
+ul.re-comment > li .kit-recomment {
+	display:flex;
+}
+ul.re-comment > li .kit-recomment.status-view {
+}
+
+
+.kit-recomment.status-view {
+}
+
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo dd div.comment textarea,
+ul.list-comment >li.view-comment .re-comment textarea {
+    border-radius: 2px;
+    background-color: #fff;
+    height: 52px;
+    padding: 6px 12px 7.1px 12px; 
+    resize: none; 
+    border: none;
+    box-sizing: border-box; 
+    color:black;
+}
+
+
+
+
+
+div.area-conts section.wrap-issueInfo dl.grid-pop.issueInfo> dd div.comment button,
+ul.list-comment >li.view-comment .re-comment button {
+	width: 60px;
+	height: 52px;
+	object-fit: contain;
+	background-color:#7167D2;
+	border-radius:7px;
+}
+
+ul.list-comment >li.view-comment .re-comment textarea,
+ul.list-comment >li.view-comment .re-comment button {
+	height:32px;
+	margin-top:7px
+}
+
+ul.list-comment >li.view-comment .re-comment textarea{
+    flex: 1;
+}
+
+.kit-recomment.status-view > button.btn-submit{
+  display:none;
+  }
+
+ul.list-comment >li.view-comment .status-view div.commentInfo button,
+.kit-recomment.status-view>textarea,
+.kit-recomment.status-view>button{
+	margin-top: 0px;
+}
+
+ div.area-conts  section ul.list-comment >li div.commentInfo div.date{
+	align-self:center
+}
+
+ div.area-conts  section ul.list-comment >li div.commentInfo{
+	display:flex;
+	gap:10px;
+	font-size:12px;
+}
+
+div.area-conts section ul.list-comment {
+	display:flex;
+	flex-direction:column;
+	gap:14px;
+}
+
+
+/*
+.pop-basic.checkIssue  div.area-conts section ul.list-comment {
+	width:463px;
+}	 */
+
+ div.area-conts  section ul.list-comment>li:first-child {
+	gap: 4px;
+	display: flex;
+	flex-direction: column;
+}
+
+ul.list-comment >li.view-comment .re-comment li{
+	width:100%
+}
+ul.list-comment >li.view-comment .re-comment .kit-recomment textarea{
+	flex: 1;
+}
+
+ul.list-comment >li.view-comment .re-comment .kit-recomment.status-view textarea{
+	display:none;
+}
+
+
+ul.list-comment >li.view-comment .re-comment .kit-recomment,
+ul.list-comment >li.view-comment .re-comment .kit-recomment ul li {
+	margin:14px 0;
+}
+
+
+
+ul.list-comment >li.view-comment .re-comment div.commentInfo button{
+	height:20px;
+}
+
+ div.area-conts  section ul.list-comment>li div.cont {
+	white-space: normal;
+	word-break: break-word;
+}
+
+ div.area-conts  section ul.list-comment>li .status-view > div.cont{
+	display: block;
+}
+ div.area-conts  section ul.list-comment>li div.commentInfo button.btn-submit{
+	background: transparent;
+	color: white;
+}
+
+ div.area-conts  section ul.list-comment>li div.name {
+	color:white;
+	font-size: 13px;
+	font-weight: bold;
+	color: #fff;
+}
+
+div.area-conts>section>div.grid-pop.column2>dl>dt{
+	padding-top:6px;
+	letter-spacing: normal;
+}
+.pop-basic.checkIssue div.area-conts>section>div.grid-pop.column2>dl>dt{
+	padding-top:0px;
+}
+
+
+div.area-conts>section>div.grid-pop.column2>dl>dt+dd:not(:readonly){
+    margin-top: 6px;
+}
+.pop-basic.checkIssue div.area-conts{
+	height:733px;
+	overflow:auto;
+	overflow-x:hidden;
+	padding: 20px 29.5px 0 30px;
+}
+.pop-basic.checkIssue{
+	width:800px;
+}
+
+#pop-view-check .area-conts{
+    padding: 20px 29.5px 0 30px;
+
+
+}
+
+
+
+/*  div.area-conts>section>div.grid-pop.column2>dl>dd{
+  	margin: 3px 19.8px 12px 6px;
+  	}
+ */
+
+div.wrap-pop.on div.floor-footer{
+    height: 55.5px;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top:20px;
+ }
+
+
+ div.wrap-pop.on div.floor-footer>div.area-footer{
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	border-top: solid 0.5px #2d2d2d;
+ }
+
+
+
+.pop-basic .floor-title .line-title button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  height: 20px;
+  width: 20px;
+  background: transparent;
+  color: white;
+  content: "";
+  background: transparent url(../img/ico_close.svg) no-repeat center center;
+}
+
+
+/*////////////////////*/
+
+div.area-conts section .grid-pop.column2 dd.collapseCell {
+  grid-column: 2 / span 3;
+}
+
+
+dd.collapseCell label:nth-child(2){
+	margin-left:16px;
+}
+div.area-conts section:nth-of-type(2) .grid-pop.column2 dd>span {
+	    -webkit-text-stroke: 0.5px #eb3d73;
+    color: #eb3d73;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 2;
+}
+
+.verticalMargin{
+	margin:auto 0;
+}
+
+/* ///이걸로 달력 삭제 //// */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  appearance: none;
+  opacity:0;
+}
+/* ///이걸로 달력 삭제 //// */
+
+
+input[type="date"].customDate {
+  color: black;
+  border-radius: 2px;
+  background-color: #fff;
+  background: #fff url(../img/ico_calendar.svg) no-repeat 84px;
+  border-width: thin;
+  appearance: none;
+  width: 110px;
+  height: 30px;
+  padding: 0px 8px 0px 9px;
+  font-size: 12px;
+  border-radius: 2px;
+  background-color: #fff;
+}
+
+
+input[type="radio"] {
+  vertical-align: middle;
+  appearance: none;
+  border: solid 0.5px #1c1c1c;
+  min-width: auto;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  position: relative;
+  margin: 0 6px 0 0px;
+   background-color: #d4d4d4;
+}
+label> input[type="radio"]:disabled {
+    background-color: #30343f;
+}
+
+input[type="radio"]:checked::before {
+  content: "";
+  display: block;
+  width: 7.5px;
+  height: 7.5px;
+  background-color: #30343f;
+  border-radius: 50%;
+  left: 22.8%;
+  top: 23%;
+  position: absolute;
+}
+
+
+#pop-view-2 input[type="radio"]:not(:checked) {
+    display: none;
+}
+
+
+
+
+#pop-view-2 input[type="radio"]:checked::before {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 12px;
+    background-color: #30343f;
+    /* border-radius: 50%; */
+    left: 19.8%;
+    top: 12%;
+    position: absolute;
+    background: transparent url(../img/ico_popupcheckbtn.svg) no-repeat center center / contain;
+    /* background: pink url(../img/ico_viewsizeDown.svg); */
+}
+#pop-view-2  input[type="radio"] {
+    vertical-align: middle;
+    appearance: none;
+    border: none 0;
+    min-width: auto;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    padding: 0;
+    position: relative;
+    margin: 0 6px 0 0px;
+    background-color: transparent;
+}
+
+
+
+.unit-form input[type="date"]::-webkit-calendar-picker-indicator {
+  /* display: none; */
+  border: #262c46;
+  text-align: end;
+  justify-items: center;
+  height: 50px;
+  width: 180px;
+  line-height: 20px;
+  height: 36px;
+
+  position: absolute;
+}
+
+section .grid-pop textarea {
+  border-radius: 2px;
+  background-color: #fff;
+  width: 343px;
+  height: 91px;
+  padding: 7px 0 0 12px;
+  color:black;
+}
+
+
+
+.pop-basic.check2d .line-table{
+	display: flex;
+	justify-content: center;
+	padding-top:20px
+}
+/* section .grid-pop.issueInfo textarea {
+  height: 58px;
+  padding:0;
+  background:transparent;
+  font-color:white;
+}
+section .grid-pop.issueInfo textarea:readonly {
+   color:white;
+
+} */
+
+div.kit-recomment.status-view div.re-commentInfo div,
+div.kit-recomment.status-view div.kit-recommentInfo textarea{margin:0;
+padding:0;}
+
+/* div.status-view div.kit-recomment::before, */
+
+.view-comment.view-recomment_2:before,
+.view-recomment_3:before,
+.view-recomment_4:before,
+ul.list-comment >li.view-comment .re-comment:before{
+    content: "";
+    background: transparent url(../img/ico_recomment.svg) no-repeat center center;
+    width: 16px;
+    height: 14px;
+    display: block;
+    /* padding-right: 8px; */
+    margin-bottom: -15px;
+    margin-left: -20px;
+
+}
+ul.list-comment >li.view-comment .re-comment:before{
+
+	margin-bottom:11px;
+}
+[class^=".view-recomment_"] {
+    /* 스타일 속성들 */
+    background-color: yellow;
+}
+.view-comment[class^=".view-recomment_"]:before{
+
+	margin-top: 5px;
+}
+
+.kit-recomment:before{
+	padding-right: 0px;
+}
+
+.grid-pop.issueInfo div.comment textarea{
+	flex-grow:1;
+}
+section .grid-pop.issueInfo dd.wrap-imgBox{
+	gap:11px;
+	display:flex;
+	flex-direction:column;
+}
+
+section .grid-pop.issueInfo dd.wrap-imgBox >.imgBox{
+	width:100%;
+	height:100%;
+	border:0.5px solid white;
+}
+
+section .grid-pop textarea::placeholder {
+  color: black;
+}
+
+
+
+div.area-conts > section dl.grid-pop.column2:nth-of-type(2) dt:first-child dd {
+  color: #eb3d73;
+  -webkit-text-stroke: 1px #eb3d73;
+}
+
+
+
+dl.grid-pop.column2 {
+  grid-template-columns: repeat(2, 55px 1fr);
+  display: grid;
+  text-align: left;
+  color: #d4d4d4;
+  font-size: 13px;
+  font-family: SystemFont;
+  gap: 11px;
+  width: 100%;
+}
+
+/* section .grid-pop textarea[name="examinationOpinion"] {
+	padding:0;
+	background:transparent;
+} */
+/*
+..section-container.section-with-top-border {
+	padding:0;
+}
+class="section-container section-with-top-border p-b-5 "
+div.wrap-pop.on div.floor-footer {
+  height: 55.5px;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+*/
+div.wrap-pop.on div.floor-footer > div.area-footer {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-top: solid 0.5px #2d2d2d;
+  gap:10px;
+}
+
+div.floor-footer button.btn-close,
+div.floor-footer button.btn-save {
+  width: 80px;
+  height: 30px;
+  margin: 12.5px 0 11.5px 0;
+  object-fit: contain;
+  background: #272b34;
+  border-radius: 5px;
+  color: white;
+
+}
+
+
+
+#pop-view-2 div.floor-conts {
+    padding: 20px 30px 0 30px;
+}
+
+#pop-view-2  div.area-conts.customScrollbar {
+  overflow: auto;
+  max-width: 871px;
+  max-height: 486px;
+  padding: 0;
+  background:#ffff;
+}
+
+div.fc-toolbar-chunk h2.fc-toolbar-title {
+	margin-right: 0px;
+}
+
+/*.pop-basic .floor-title .line-title button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  height: 20px;
+  width: 20px;
+  margin-top: 5px;
+  background: transparent;
+  color: white;
+  content: "";
+  background: transparent url(../img/ico_close.svg) no-repeat center center;
+}*/
+
+.pop-basic.check2d .floor-title .line-title button {
+	margin-left:600px;
+}
+
+
+.pop-basic.checkIssue .floor-title .line-title button {
+	margin-left: 768px;
+}
+
+div.commentInfo >ul.re-comment >li{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    padding-left: 22px;
+}
+
+.kit-recomment{
+	display:flex;
+	gap:9px;
+
+
+}
+
+li.view-recomment_2,
+li.view-comment .re-comment{
+	margin-left:22px;
+}
+
+li.view-recomment_3{
+	margin-left:44px;
+}
+
+li.view-recomment_4{
+	margin-left:66px;
+}
+/* .wrap-commentArea{
+	display:flex;
+	gap:10px;
+}
+ul.list-comment >li.view-comment .re-comment .status-view button,.wrap-commentArea button.btn-submit{
+	margin:0;
+} */
+
+.group-comment {
+	display: none;
+	flex-direction: column;
+}
+
+div.area-conts section ul.list-comment >li div.commentInfo,
+ul.list-comment > li.view-comment ul.re-comment .author,
+ul.list-comment > li.view-comment ul.re-comment .commentInfo  {
+}
+
+ul.list-comment > li.view-comment ul.re-comment .status-view > .group-comment {
+	display: flex;
+}
+ul.list-comment > li.view-comment ul.re-comment .status-view .commentInfo {
+	display: flex;
+}
+
+ul.list-comment > li.view-comment ul.re-comment .kit-recomment > textarea
+ {
+	height: 32px;
+	color: #ffffff;
+}
+ul.list-comment > li.view-comment ul.re-comment .kit-recomment.status-view > textarea
+ {
+	display: none;
+}
+
+
+
+
+
+
+dl.column-regist {
+  display: grid;
+  grid-template-columns: minmax(55px, auto) auto;
+  gap: 10px;
+}
+dl.column-regist > dt {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  text-align: left;
+  color: #d4d4d4;
+}
+dl.column-regist > dd {
+}
+dl.column-regist > dd input[type='text'] {
+  height: 30px;
+  padding: 7px;
+  border-radius: 2px;
+  border: 0 none;
+  color: #111111;
+  background: #fff;
+}
+dl.column-regist > dd select {
+  min-width: 110px;
+  height: 30px;
+  padding: 7px;
+  border-radius: 2px;
+  border: 0 none;
+  color: #111111;
+  background: #fff url(../img/ico_dropdown_2.svg) no-repeat right 10px center;
+}
+
+dl.dropdown > dt a {
+    background: #ffffff url(../img/ico_dropdown_2.svg) no-repeat right 10px center;
+}
+
+
+
+dl.column-regist {
+  display: grid;
+  grid-template-columns: 50px auto;
+}
+

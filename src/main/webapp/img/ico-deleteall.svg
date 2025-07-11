@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27">
+    <path data-name="사각형 1579" style="fill:none" d="M0 0h27v27H0z"/>
+    <g data-name="그룹 481">
+        <path data-name="빼기 22" d="M-2757.517-4.316h-9.548a.937.937 0 0 1-.971-.7l-2.339-14.728h16.17l-.344 2.168h-4.3a1.5 1.5 0 0 0-1.5 1.5v8a1.485 1.485 0 0 0 .308.91l-.018.167a.461.461 0 0 0 .1.341.463.463 0 0 0 .315.172h.05a.467.467 0 0 0 .34-.149 1.5 1.5 0 0 0 .4.055h2.554l-.249 1.565a.938.938 0 0 1-.968.699zm-4.773-11.938a.467.467 0 0 0-.466.466v8.837a.467.467 0 0 0 .466.466.467.467 0 0 0 .466-.466v-8.837a.467.467 0 0 0-.467-.466zm-3.626 0h-.051a.467.467 0 0 0-.415.513l.933 8.837a.466.466 0 0 0 .463.417h.05a.467.467 0 0 0 .415-.513l-.933-8.837a.472.472 0 0 0-.463-.417z" transform="translate(2773.945 28.973)" style="stroke-miterlimit:10;stroke:transparent;fill:#d4d4d4"/>
+        <g data-name="그룹 4942" transform="translate(-1328.625 1109.741)">
+            <rect data-name="사각형 1580" width="18.067" height="2.181" rx="1" transform="rotate(-8.152 -7078.72 -9891.085)" style="fill:#d4d4d4"/>
+            <rect data-name="사각형 1581" width="9.033" height="2.845" rx="1.423" transform="rotate(-8.152 -7096.279 -9921.68)" style="stroke:#d4d4d4;stroke-miterlimit:10;fill:none"/>
+        </g>
+        <g data-name="그룹 4864">
+            <g data-name="사각형 143265" transform="translate(14.095 11.9)" style="stroke-linejoin:round;stroke:#d4d4d4;stroke-miterlimit:10;fill:none">
+                <rect width="9.995" height="9.995" rx="1" style="stroke:none"/>
+                <rect x="-.5" y="-.5" width="10.995" height="10.995" rx="1.5" style="fill:none"/>
+            </g>
+            <path data-name="패스 10887" d="M1331.851-1032.629a.441.441 0 0 1-.315-.131l-2.322-2.345a.442.442 0 0 1 0-.626.443.443 0 0 1 .626 0l2.011 2.032 3.742-3.7a.442.442 0 0 1 .626 0 .442.442 0 0 1 0 .625l-4.056 4.012a.442.442 0 0 1-.312.133z" transform="translate(-1313.632 1051.975)" style="fill:#d4d4d4"/>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.IssueCommentMapper">
+
+    <select id="selectIssueCommentList" parameterType="SearchDTO" resultType="CheckIssueCommentDTO">
+	WITH RECURSIVE t3 (IC_SEQ, PARENT_IC_SEQ, COMMENT_CONTS, REG_ID, REG_DATE, ORDER_PATH) AS
+	(
+		SELECT t1.IC_SEQ, t1.PARENT_IC_SEQ, t1.COMMENT_CONTS
+				, t1.REG_ID
+				, CASE WHEN DATE_FORMAT(t1.REG_DATE, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN DATE_FORMAT(t1.REG_DATE, '%T') ELSE DATE_FORMAT(t1.REG_DATE, '%Y-%m-%d') END REG_DATE
+				, CONVERT(CONCAT(LPAD(CONVERT(t1.SORT_SEQ, CHAR(2)), 2, '0'), '/'), VARCHAR(1000)) AS ORDER_PATH
+		FROM tb_kc_issue_comment t1
+		WHERE t1.PARENT_IC_SEQ = 0
+			AND	t1.ISSUE_SEQ = #{issueSeq}
+		UNION ALL
+		SELECT t2.IC_SEQ, t2.PARENT_IC_SEQ, t2.COMMENT_CONTS
+				, t2.REG_ID
+				, CASE WHEN DATE_FORMAT(t2.REG_DATE, '%Y-%m-%d') = DATE_FORMAT(NOW(), '%Y-%m-%d') THEN DATE_FORMAT(t2.REG_DATE, '%T') ELSE DATE_FORMAT(t2.REG_DATE, '%Y-%m-%d') END REG_DATE
+				, CONCAT(t3.ORDER_PATH, CONCAT(LPAD(CONVERT(t2.SORT_SEQ, CHAR(2)), 2, '0'), '/')) AS ORDER_PATH
+		FROM tb_kc_issue_comment t2
+			INNER JOIN t3
+				ON t2.PARENT_IC_SEQ = t3.IC_SEQ
+		WHERE t2.ISSUE_SEQ = #{issueSeq}
+	)
+	SELECT *
+	FROM t3
+	ORDER BY ORDER_PATH
+    </select>
+
+    <insert id="insertIssueComment" parameterType="CheckIssueCommentDTO">
+    <selectKey keyProperty="sortSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(SORT_SEQ), 0) + 1 FROM tb_kc_issue_comment WHERE ISSUE_SEQ = #{issueSeq} AND PARENT_IC_SEQ = #{parentIcSeq}
+    </selectKey>
+    INSERT INTO tb_kc_issue_comment (ISSUE_SEQ, PARENT_IC_SEQ, COMMENT_CONTS, SORT_SEQ, REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+	VALUES (#{issueSeq}, #{parentIcSeq}, #{commentConts}, #{sortSeq}, #{regId}, NOW(), #{regId}, NOW())
+    </insert>
+
+</mapper>

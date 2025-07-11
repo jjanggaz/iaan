@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+    <g transform="translate(-503 -212)">
+        <g data-name="사각형 143411" transform="translate(503 212)" style="stroke:#8071f2;fill:none">
+            <rect width="16" height="16" rx="1" style="stroke:none"/>
+            <rect x=".5" y=".5" width="15" height="15" rx=".5" style="fill:none"/>
+        </g>
+        <path data-name="선 260" transform="translate(503.5 216.5)" style="stroke:#8071f2;fill:none" d="M0 0h15"/>
+        <circle data-name="타원 1507" cx="1" cy="1" r="1" transform="translate(506 219)" style="fill:#8071f2"/>
+        <circle data-name="타원 1512" cx="1" cy="1" r="1" transform="translate(506 223)" style="fill:#8071f2"/>
+        <circle data-name="타원 1508" cx="1" cy="1" r="1" transform="translate(510 219)" style="fill:#8071f2"/>
+        <circle data-name="타원 1511" cx="1" cy="1" r="1" transform="translate(510 223)" style="fill:#8071f2"/>
+        <circle data-name="타원 1509" cx="1" cy="1" r="1" transform="translate(514 219)" style="fill:#8071f2"/>
+        <circle data-name="타원 1510" cx="1" cy="1" r="1" transform="translate(514 223)" style="fill:#8071f2"/>
+    </g>
+</svg>

@@ -1,0 +1,515 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.CheckMapper">
+
+   <select id="selectCheck2dList" parameterType="SearchDTO" resultType="CheckDwgDTO">
+    SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+			, CASE WHEN (	SELECT 	COUNT(DCI.DWG_SEQ)
+							FROM 	tb_kc_dwg_MST_item DCI
+							WHERE 	DCI.DWG_SEQ = TEMP.DWG_SEQ
+								) = 0 THEN '-'
+					ELSE	(	SELECT 	COUNT(DCI.DWG_SEQ)
+							FROM 	tb_kc_dwg_MST_item DCI
+								INNER JOIN tb_kc_code DC
+									ON DC.CD_GROUP = '004'
+										AND	DC.USE_YN = 'Y'
+										AND	DC.CD_ID = DCI.ITEM
+							WHERE 	DCI.DWG_SEQ = TEMP.DWG_SEQ
+								AND DCI.CHECK_CNT > 0) END ITEM_CHECK
+	FROM	(
+			SELECT	DWG_SEQ, DWG_NUM, GROUP_CONCAT(ROOT_VALVE_NM) AS ROOT_VALVE_NM
+					, REG_DATE, COMPLETE_DATE, ACTION_DEADLINE, ACTION_DATE, STATUS_NM,FILE_SVG
+			FROM	(
+					SELECT	DD.DWG_SEQ, DD.DWG_FILE_NM AS DWG_NUM,TAG.TAG_NM AS ROOT_VALVE_NM
+							
+							, DC2.CD_NM AS STATUS_NM
+							, DD.MOD_DATE AS REG_DATE, DD.STATUS
+							, DD.ACTION_DEADLINE, DD.ACTION_DATE, DD.COMPLETE_DATE
+							, dd.FILE_SVG
+					FROM tb_kc_dwg_tag TAG
+						,tb_kc_dwg_mst DD
+						
+						INNER JOIN tb_kc_code DC2
+							ON DC2.CD_GROUP = '001'
+								AND	DC2.CD_ID = DD.STATUS
+								AND	DC2.CD_ID <![CDATA[<=]]> 500
+					WHERE	TAG.DWG_SEQ = DD.DWG_SEQ 
+					<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  DD.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  DD.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  DD.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  DD.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+				) TEMP
+			WHERE	1 = 1
+			
+			GROUP BY DWG_SEQ, DWG_NUM
+					, REG_DATE, COMPLETE_DATE, ACTION_DATE, ACTION_DEADLINE, STATUS_NM
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+	ORDER BY ROWNUM DESC
+	LIMIT #{startRowNum}, #{pageSize}
+    </select>
+
+    <select id="selectCheck2dCnt" parameterType="SearchDTO" resultType="SearchDTO">
+    SELECT	COUNT(DWG_SEQ) AS TOTAL_DATA_CNT
+	FROM	(
+			SELECT	DWG_SEQ, DWG_NUM, GROUP_CONCAT(ROOT_VALVE_NM) AS ROOT_VALVE_NM
+					, REG_DATE, COMPLETE_DATE, ACTION_DEADLINE, ACTION_DATE, STATUS_NM
+			FROM	(
+					SELECT	DD.DWG_SEQ, DD.DWG_FILE_NM AS DWG_NUM,TAG.TAG_NM AS ROOT_VALVE_NM
+							, DC2.CD_NM AS STATUS_NM
+							, DD.REG_DATE, DD.STATUS
+							, DD.ACTION_DEADLINE, DD.ACTION_DATE, DD.COMPLETE_DATE
+					FROM tb_kc_dwg_tag TAG
+						,tb_kc_dwg_mst DD
+						
+						INNER JOIN tb_kc_code DC2
+							ON DC2.CD_GROUP = '001'
+								AND	DC2.CD_ID = DD.STATUS
+								AND	DC2.CD_ID <![CDATA[<=]]> 500
+					WHERE	TAG.DWG_SEQ = DD.DWG_SEQ 
+					<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  DD.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  DD.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  DD.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  DD.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+				) TEMP
+			WHERE	1 = 1
+			
+			GROUP BY DWG_SEQ, DWG_NUM
+					, REG_DATE, COMPLETE_DATE, ACTION_DATE, ACTION_DEADLINE, STATUS_NM
+		)TEMP
+    </select>
+
+    <select id="selectCheck3dList" parameterType="SearchDTO" resultType="CheckDwgDTO">
+    SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+	FROM	(
+			SELECT	DWG_SEQ, DWG_NUM, GROUP_CONCAT(ROOT_VALVE_NM) AS ROOT_VALVE_NM
+					, REG_DATE, COMPLETE_DATE,COMPLETE_DATE3, ACTION_DEADLINE, ACTION_DATE, ACTION_DATE3,STATUS_NM,FILE_SVG
+			FROM	(
+					SELECT	DD.DWG_SEQ, DD.DWG_FILE_NM AS DWG_NUM, TAG.TAG_NM AS ROOT_VALVE_NM
+							
+							, DC2.CD_NM AS STATUS_NM
+							, DD.REG_DATE, DD.STATUS
+							, DD.ACTION_DEADLINE, DD.ACTION_DATE,DD.ACTION_DATE3, DD.COMPLETE_DATE ,DD.COMPLETE_DATE3
+							, DD.FILE_SVG
+					FROM	tb_kc_dwg_tag TAG
+						,tb_kc_dwg_mst DD
+						INNER JOIN tb_kc_code DC2
+							ON DC2.CD_GROUP = '001'
+								AND	DC2.CD_ID = DD.STATUS
+								AND	DC2.CD_ID >= 500
+					WHERE	TAG.DWG_SEQ = DD.DWG_SEQ 
+					<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  DD.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  DD.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  DD.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  DD.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+				) TEMP
+			WHERE	1 = 1
+			
+			GROUP BY DWG_SEQ, DWG_NUM
+					, REG_DATE, COMPLETE_DATE, ACTION_DATE, ACTION_DEADLINE, STATUS_NM
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+	ORDER BY ROWNUM DESC
+	LIMIT #{startRowNum}, #{pageSize}
+    </select>
+
+    <select id="selectCheck3dCnt" parameterType="SearchDTO" resultType="SearchDTO">
+    SELECT	COUNT(DWG_SEQ) AS TOTAL_DATA_CNT
+	FROM	(
+			SELECT	DWG_SEQ, DWG_NUM, GROUP_CONCAT(ROOT_VALVE_NM) AS ROOT_VALVE_NM
+					, REG_DATE, COMPLETE_DATE, ACTION_DEADLINE, ACTION_DATE, STATUS_NM
+			FROM	(
+					SELECT	DD.DWG_SEQ, DD.DWG_FILE_NM AS DWG_NUM, TAG.TAG_NM AS ROOT_VALVE_NM
+						
+							, DC2.CD_NM AS STATUS_NM
+							, DD.REG_DATE, DD.STATUS
+							, DD.ACTION_DEADLINE, DD.ACTION_DATE, DD.COMPLETE_DATE
+					FROM	tb_kc_dwg_tag TAG
+						,tb_kc_dwg_mst DD
+						
+						INNER JOIN tb_kc_code DC2
+							ON DC2.CD_GROUP = '001'
+								AND	DC2.CD_ID = DD.STATUS
+								AND	DC2.CD_ID >= 500
+					WHERE	TAG.DWG_SEQ = DD.DWG_SEQ 
+					<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  DD.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  DD.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  DD.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  DD.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  TAG.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+				) TEMP
+			WHERE	1 = 1
+			
+			GROUP BY DWG_SEQ, DWG_NUM
+					, REG_DATE, COMPLETE_DATE, ACTION_DATE, ACTION_DEADLINE, STATUS_NM
+		)TEMP
+    </select>
+
+    <select id="selectCheckMaxVersion" parameterType="CheckDwgDTO" resultType="int">
+    SELECT	IFNULL(MAX(VERSION), 0) AS VERSION
+	FROM	tb_kc_dwg_check
+	WHERE	DWG_SEQ = #{dwgSeq}
+    </select>
+
+    <update id="updateCheckVersion" parameterType="CheckDwgDTO">
+    <selectKey keyProperty="version" resultType="int" order="AFTER">
+		SELECT IFNULL(MAX(VERSION), 0) FROM tb_kc_dwg_check WHERE DWG_SEQ = #{dwgSeq}
+    </selectKey>
+    UPDATE	tb_kc_dwg_check
+		SET	VERSION = (SELECT IFNULL(MAX(VERSION), 0) + 1 FROM tb_kc_dwg_check WHERE DWG_SEQ = #{dwgSeq})
+	WHERE	DWG_SEQ = #{dwgSeq}
+		AND	VERSION = 0
+    </update>
+
+	<insert id="insertDwgMst" parameterType="CheckDwgDTO">
+    INSERT INTO tb_kc_dwg_mst (DWG_SEQ,  STATUS, CHECK_DATE
+    	                        ,FILE_AE,FILE_DWG,FILE_JSON,FILE_DTDX
+    							, REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+    		VALUES (#{dwgSeq},  '300', NOW()
+    		   		, #{fileAe} ,#{fileDwg} , #{fileJson} , #{fileDtdx}
+    				, #{regId}, NOW(), #{regId}, NOW())
+    ON DUPLICATE KEY UPDATE
+    		  DWG_SEQ = #{dwgSeq}
+	        , STATUS = '300'
+	        , CHECK_DATE = NOW()
+	        <if test='fileAe != null and fileAe gt 0'> 
+	        , FILE_AE = #{fileAe}
+	        </if>
+			, FILE_JSON = #{fileJson}
+			, FILE_DWG = #{fileDwg}
+			<if test='fileDtdx != null and fileDtdx gt 0'> 
+			, FILE_DTDX = #{fileDtdx}
+			</if>
+			<if test='fileSvg != null and fileSvg gt 0'> 
+			, FILE_SVG = #{fileSvg}
+			</if>
+	        , MOD_ID = #{regId}
+	        , MOD_DATE = NOW()
+    </insert>
+    
+    <insert id="insertCheck" parameterType="CheckDwgDTO" useGeneratedKeys="true" keyProperty="version">
+		<selectKey keyProperty="version" resultType="int" order="BEFORE">
+				(SELECT IFNULL(MAX(VERSION)+1,1) FROM tb_kc_dwg_check WHERE DWG_SEQ = #{dwgSeq})
+		</selectKey>
+    INSERT INTO tb_kc_dwg_check (DWG_SEQ
+    			,VERSION
+				,STATUS
+				,DWG_FILE_NM
+				,SVG_FILE_NM
+				,JSON_FILE_NM
+				,CHECK_DATE
+				,CHECK_YN
+				,ACTION_DEADLINE
+				,ACTION_DATE
+				,COMPLETE_DATE
+				,EXAMINATION_OPINION
+				,ACTION_OPINION
+				,ACTION_DEADLINE3
+				,ACTION_DATE3
+				,COMPLETE_DATE3
+				,EXAMINATION_OPINION3
+				,ACTION_OPINION3
+				,XYZ_POINT
+				,FILE_AE
+				,FILE_DWG
+				,FILE_JSON
+				,REG_ID
+				,REG_DATE
+				,MOD_ID
+				,MOD_DATE)
+    		SELECT DWG_SEQ
+    		    ,#{version}
+				,STATUS
+				,DWG_FILE_NM
+				,SVG_FILE_NM
+				,JSON_FILE_NM
+				,CHECK_DATE
+				,CHECK_YN
+				,ACTION_DEADLINE
+				,ACTION_DATE
+				,COMPLETE_DATE
+				,EXAMINATION_OPINION
+				,ACTION_OPINION
+				,ACTION_DEADLINE3
+				,ACTION_DATE3
+				,COMPLETE_DATE3
+				,EXAMINATION_OPINION3
+				,ACTION_OPINION3
+				,XYZ_POINT
+				,FILE_AE
+				,FILE_DWG
+				,FILE_JSON
+				,REG_ID
+				,REG_DATE
+				,MOD_ID
+				,MOD_DATE
+			FROM TB_KC_DWG_MST
+			WHERE DWG_SEQ = #{dwgSeq} ;
+			
+		INSERT INTO tH_kc_dwg_mst_3dfile SELECT * FROM tb_kc_dwg_mst_3dfile WHERE DWG_SEQ = #{dwgSeq} ;
+    				
+    </insert>
+    
+    
+    <insert id="insert3DCheckIssue" parameterType="CheckDwgDTO" useGeneratedKeys="true" keyProperty="version">
+		<selectKey keyProperty="version" resultType="int" order="BEFORE">
+				(SELECT IFNULL(MAX(VERSION)+1,1) FROM tb_kc_dwg_check WHERE DWG_SEQ = #{dwgSeq})
+		</selectKey>
+        INSERT INTO tb_kc_dwg_mst_3dfile (DWG_SEQ
+    			,FILE_ID
+    			,FILE_SEQ
+    			,HANDLE)
+    	VALUES(
+    	#{dwgSeq}
+    	,#{fileId}
+    	,#{fileSeq}
+    	,#{handle}
+    	);
+    	
+    	
+    				
+    </insert>
+    
+
+    <update id="updateCheck" parameterType="CheckDwgDTO">
+    UPDATE	tb_kc_dwg_mst
+    	SET	 MOD_ID = #{modId}
+    		, MOD_DATE = NOW()
+    	<if test='status != null and status != ""'>
+			, STATUS = #{status}
+		</if>
+   		<if test='checkYn != null and checkYn != ""'>
+			, CHECK_YN = #{checkYn}
+		</if>
+		<if test='actionDeadline != null and actionDeadline != ""'>
+   			, ACTION_DEADLINE = #{actionDeadline}
+   		</if>
+		<if test='actionDate != null and actionDate != ""'>
+   			, ACTION_DATE = #{actionDate}
+   		</if>
+		<if test='status == "500"'>
+   			, COMPLETE_DATE =  DATE_FORMAT(NOW(), '%Y-%m-%d')
+   		</if>
+		<if test='examinationOpinion != null and examinationOpinion != ""'>
+   			, EXAMINATION_OPINION = #{examinationOpinion}
+   		</if>
+		<if test='actionOpinion != null and actionOpinion != ""'>
+   			, ACTION_OPINION = #{actionOpinion}
+   		</if>
+		<if test='actionDeadline3 != null and actionDeadline3 != ""'>
+   			, ACTION_DEADLINE3 = #{actionDeadline3}
+   		</if>
+		<if test='actionDate3 != null and actionDate3 != ""'>
+   			, ACTION_DATE3 = #{actionDate3}
+   		</if>
+		<if test='status == "700"'>
+   			, COMPLETE_DATE3 = DATE_FORMAT(NOW(), '%Y-%m-%d')
+   		</if>
+		<if test='examinationOpinion3 != null and examinationOpinion3 != ""'>
+   			, EXAMINATION_OPINION3 = #{examinationOpinion3}
+   		</if>
+		<if test='actionOpinion3 != null and actionOpinion3 != ""'>
+   			, ACTION_OPINION3 = #{actionOpinion3}
+   		</if>
+		<if test='xyzPoint != null and xyzPoint != ""'>
+   			, XYZ_POINT = #{xyzPoint}
+   		</if>
+    WHERE	DWG_SEQ = #{dwgSeq}
+    </update>
+
+    <select id="selectCheckInfo" parameterType="SearchDTO" resultType="CheckDwgDTO">
+    SELECT	DD.DWG_SEQ, DD.DWG_FILE_NM AS DWG_NUM
+			, DD.STATUS, DATE_FORMAT(DD.CHECK_DATE, '%Y-%m-%d') AS CHECK_DATE, DD.CHECK_YN
+			, DD.ACTION_DEADLINE
+			, DD.ACTION_DATE, DD.COMPLETE_DATE
+			, IFNULL(DD.EXAMINATION_OPINION,"") EXAMINATION_OPINION
+			, IFNULL(DD.ACTION_OPINION,"") ACTION_OPINION
+			, DD.ACTION_DEADLINE3
+			, IFNULL(DD.ACTION_DATE3,"") ACTION_DATE3
+			, IFNULL(DD.COMPLETE_DATE3,"") COMPLETE_DATE3
+			, IFNULL(DD.EXAMINATION_OPINION3,"") EXAMINATION_OPINION3
+			, IFNULL(DD.ACTION_OPINION3,"") ACTION_OPINION3
+			, DD.XYZ_POINT, DD.REG_ID, DATE_FORMAT(DD.REG_DATE, '%Y-%m-%d') AS REG_DATE
+			, DD.MOD_ID, DATE_FORMAT(DD.MOD_DATE, '%Y-%m-%d') AS MOD_DATE
+			, DC2.CD_NM AS STATUS_NM
+			, TAG.TAG_NM AS ROOT_VALVE_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_PLANT) PLANT_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_UNIT) UNIT_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_BUILDING) BUILDING_NM
+			,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = DD.DWG_LEVEL) LEVEL_NM
+			
+			, CASE WHEN (	SELECT 	COUNT(DCI.DWG_SEQ)
+							FROM 	tb_kc_dwg_MST_item DCI
+							WHERE 	DCI.DWG_SEQ = DD.DWG_SEQ
+								) = 0 THEN '-'
+					ELSE	(	SELECT 	COUNT(DCI.DWG_SEQ)
+							FROM 	tb_kc_dwg_MST_item DCI
+								INNER JOIN tb_kc_code DC
+									ON DC.CD_GROUP = '004'
+										AND	DC.USE_YN = 'Y'
+										AND	DC.CD_ID = DCI.ITEM
+							WHERE 	DCI.DWG_SEQ = DD.DWG_SEQ
+								
+								AND DCI.CHECK_CNT > 0) END CHECK_RESULT
+	FROM tb_kc_dwg_tag TAG
+	    ,tb_kc_dwg_MST DD
+		INNER JOIN tb_kc_code DC2
+			ON DC2.CD_GROUP = '001'
+				AND	DC2.CD_ID = DD.STATUS
+	WHERE	TAG.DWG_SEQ = DD.DWG_SEQ
+		AND	DD.DWG_SEQ = #{dwgSeq}
+		
+	GROUP BY DD.DWG_SEQ, DD.DWG_FILE_NM
+			, DD.STATUS, DD.CHECK_DATE, DD.CHECK_YN, DD.ACTION_DEADLINE
+			, DD.ACTION_DATE, DD.COMPLETE_DATE, DD.EXAMINATION_OPINION, DD.ACTION_OPINION
+			, DD.ACTION_DEADLINE3, DD.ACTION_DATE3, DD.COMPLETE_DATE3, DD.EXAMINATION_OPINION3, DD.ACTION_OPINION3
+			, DD.XYZ_POINT, DD.REG_ID, DD.REG_DATE
+			, DD.MOD_ID, DD.MOD_DATE
+			, DC2.CD_NM
+			, DD.DWG_PLANT, DD.DWG_UNIT, DD.DWG_BUILDING, DD.DWG_LEVEL
+    </select>
+
+	<select id="selectComCodeList" parameterType="Map" resultType="ComCodeDTO">
+    
+		SELECT CD_GROUP
+			,CD_ID
+			,PARENT_ID
+			,SORT_SEQ
+			,CD_NM
+			,CD_DESC1
+			,CD_DESC2
+			,CD_DESC3
+		FROM tb_kc_code
+		WHERE CD_GROUP  = #{parentId}
+		AND PARENT_ID = #{parentId}
+		
+		<if test='lvlCode != null and lvlCode != ""'>
+   			AND CD_DESC2 = #{lvlCode}
+   		</if>
+		AND USE_YN ='Y'
+	</select>
+	
+	
+	<select id="selectFileInfo" parameterType="Map" resultType="DwgFileDTO">
+    
+		SELECT FILE_ID
+			,FILE_SEQ
+			,FILE_TYPE
+			,FILE_NM_ORI
+			,FILE_NM
+			,FILE_PATH
+		FROM tb_kc_atch_file
+		WHERE FILE_ID  = #{fileId}
+			AND FILE_SEQ = #{fileSeq}
+	</select>
+	
+	
+	<select id="selectJsonFileDwgSeq" parameterType="Map" resultType="String">
+    	SELECT DWG_SEQ
+		FROM TB_KC_DWG_MST 
+		WHERE FILE_JSON = ( SELECT FILE_ID FROM tb_kc_atch_file 
+							WHERE FILE_NM  = #{fileId})
+	</select>
+	
+
+	<insert id="inserttbkcdwgmst3dfile" parameterType="Map" >
+    	insert into tb_kc_dwg_mst_3dfile(
+    		DWG_SEQ
+    		,mesh1_Id
+    		,mesh2_Id
+    		,FILE_ID
+    		,FILE_SEQ
+    		,FILE_BASE64
+    	)VALUES(
+    		 #{dwgSeq}
+    		 , #{mesh1Id}
+    		 , #{mesh2Id}
+    		 , #{fileId}
+    		 , #{fileSeq}
+    		 , #{fileBase64}
+    	)
+		ON DUPLICATE KEY UPDATE
+    		  FILE_ID = #{fileId}
+	        , FILE_SEQ =#{fileSeq}
+	   ;
+	        
+	   insert into th_kc_dwg_mst_3dfile(
+    		DWG_SEQ
+    		,mesh1_Id
+    		,mesh2_Id
+    		,FILE_ID
+    		,FILE_SEQ
+    		,FILE_BASE64
+    	)VALUES(
+    		 #{dwgSeq}
+    		 , #{mesh1Id}
+    		 , #{mesh2Id}
+    		 , #{fileId}
+    		 , #{fileSeq}
+    		 , #{fileBase64}
+    	)  
+	        
+	   
+	</insert>
+	
+	<select id="select3DFileList" parameterType="SearchDTO" resultType="CheckFileDTO">
+    	SELECT A.DWG_SEQ
+			, A.MESH1_ID
+			, A.MESH2_ID
+			, A.FILE_ID
+			, A.FILE_SEQ
+			, B.FILE_NM_ORI AS FILE_NM
+			, A.FILE_BASE64
+		FROM tb_kc_dwg_mst_3dfile a , tb_kc_atch_file b
+		WHERE a.file_id = b.file_id
+			AND A.FILE_SEQ = B.FILE_SEQ
+			AND A.DWG_SEQ =#{dwgSeq}
+	</select>
+	
+	
+	
+</mapper>

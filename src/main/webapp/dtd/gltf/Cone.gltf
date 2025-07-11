@@ -1,0 +1,156 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v5.2.0)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 41,
+            "type": "VEC3",
+            "max": [
+                0.15000000596046449,
+                0.2500000596046448,
+                0.15000011026859284
+            ],
+            "min": [
+                -0.1499999761581421,
+                -0.2500000298023224,
+                -0.14999990165233613
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 41,
+            "type": "VEC3",
+            "max": [
+                0.9578263163566589,
+                1.0,
+                0.9578263759613037
+            ],
+            "min": [
+                -0.9578263759613037,
+                -1.0,
+                -0.9578262567520142
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 41,
+            "type": "VEC2",
+            "max": [
+                0.6003067493438721,
+                0.9999000430107117
+            ],
+            "min": [
+                0.00009996003063861281,
+                0.00009995698928833008
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 114,
+            "type": "SCALAR",
+            "max": [
+                40
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 1768,
+            "uri": "Cone.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 492,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 492,
+            "byteLength": 492,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 984,
+            "byteLength": 328,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 1312,
+            "byteLength": 456,
+            "target": 34963
+        }
+    ],
+    "materials": [
+        {
+            "name": "SpawnPointCone",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "metallicFactor": 0.0
+            },
+            "emissiveFactor": [
+                0.9999998807907105,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Scene",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 3,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TEXCOORD_0": 2
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "RootNode",
+            "mesh": 0
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}

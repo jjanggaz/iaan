@@ -1,0 +1,487 @@
+@font-face {
+    font-family: 'NotoSansKR';
+    src: url('../fonts/NotoSansKR-Regular.ttf');
+}
+
+/* 프로필, 사용자 목록 관련 Start */
+.user-profile-container {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: calc(100% - 10px);
+    height: 50px;
+    font-family: 'NotoSansKR', sans-serif;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.initial-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background: transparent;
+}
+
+.initial-outer-circle,
+.initial-inner-circle,
+.initial-text {
+    position: absolute;
+    border-radius: 50%;
+}
+
+.initial-outer-circle {
+    width: 100%;
+    height: 100%;
+    background: red;
+}
+
+.initial-inner-circle {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 70%;
+    height: 70%;
+    background: #404451;
+}
+
+.initial-text {
+    left: 50%;
+    top: calc(50% - 2px);
+    width: 100%;
+    height: 100%;
+    transform: translate(-50%, -50%);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.user-info-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 45px;
+    width: 115px;
+}
+
+.user-info-nickname-text {
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+}
+
+.user-info-name-text {
+    font-size: 12px;
+    color: rgb(197, 161, 0);
+}
+
+.user-info-company-text {
+    font-size: 10px;
+    color: white;
+}
+
+.user-info-device-text {
+    position: absolute;
+    top: 34px;
+    width: 30px;
+    height: 15px;
+    border: 1px solid black;
+    border-radius: 10%;
+    background: rgb(30, 33, 40);
+    color: white;
+    font-size: 10px;
+    text-align: center;
+}
+
+.user-info-button-container {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    height: 100%;
+    gap: 10px;
+}
+
+input.user-info-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+    cursor: pointer;
+}
+
+input.user-info-button:active {
+    border: none;
+}
+
+.user-list-container {
+    position: absolute;
+    left: 0px;
+    top: 72px;
+    width: 100%;
+    height: calc(100% - 72px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow-y: auto;
+}
+
+.user-list-container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.user-list-container::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background: #636772;
+}
+
+.user-list-container::-webkit-scrollbar-track {
+    width: 4px;
+    height: 10px;
+    background: #30343f;
+}
+
+.user-cell-container {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: 81px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgb(50, 50, 50);
+}
+
+.user-talking-image {
+    position: absolute;
+    right: 10px;
+    top: calc(50% - 2px);
+    width: 30px;
+    height: 30px;
+    transform: translate(0%, -50%);
+}
+
+/* 프로필, 사용자 목록 관련 End */
+
+/* Request, Received Call 관련 Start */
+.call-container {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 100%;
+    height: 170px;
+    transform: translate(-50%, -50%);
+}
+
+.call-caller-text {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 14px;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.call-message-text {
+    position: absolute;
+    left: 0;
+    top: 50px;
+    width: 100%;
+    height: 14px;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
+input.call-button {
+    position: absolute;
+    top: 120px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border-width: 1px;
+    border-style: solid;
+    border-color: transparent;
+}
+
+/* Request, Received Call 관련 End */
+
+/* 그룹 사용자 추가 팝업 Start */
+.add-user-to-group-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.add-user-to-group-popup {
+    position: absolute;
+    left: 5%;
+    top: 10%;
+    width: 90%;
+    height: 80%;
+    background: rgb(23, 25, 31);
+    border-radius: 5px;
+    border-width: 0px;
+}
+
+.add-user-to-group-notice-text {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: calc(100% - 20px);
+    height: 20px;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    color: white;
+    text-align: left;
+}
+
+.add-user-to-group-list-container {
+    position: absolute;
+    left: 10px;
+    top: 40px;
+    width: calc(100% - 20px);
+    height: calc(100% - 100px);
+    border-radius: 5px;
+    background: rgb(35, 38, 47);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.add-user-to-group-list-container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.add-user-to-group-list-container::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background: #636772;
+}
+
+.add-user-to-group-list-container::-webkit-scrollbar-track {
+    width: 4px;
+    height: 10px;
+    background: #30343f;
+}
+
+input.add-user-to-group-button {
+    margin: 0;
+    position: absolute;
+    bottom: 10px;
+    width: 100px;
+    height: 35px;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    border-width: 0px;
+    background: rgb(58, 58, 58);
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    color: white;
+    text-align: center;
+}
+
+input.add-user-to-group-button:disabled {
+    background: rgb(30, 31, 34);
+}
+
+/* 그룹 사용자 추가 팝업 End */
+
+/* 채팅창 Start */
+.chat-panel .chat-panel-list-container {
+    position: absolute;
+    left: 50%;
+    top: 80px;
+    width: 95%;
+    height: calc(100% - 150px);
+    transform: translateX(-50%);
+    background: rgb(37, 37, 37);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.chat-panel .chat-panel-list-container::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.chat-panel .chat-panel-list-container::-webkit-scrollbar-thumb {
+    width: 4px;
+    height: 4px;
+    border-radius: 2px;
+    background: #636772;
+}
+
+.chat-panel .chat-panel-list-container::-webkit-scrollbar-track {
+    width: 4px;
+    height: 10px;
+    background: #30343f;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-system-message {
+    width: 95%;
+    height: 40px;
+    line-height: 40px;
+    background: rgb(60, 60, 60);
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 12px;
+    color: rgb(158, 158, 158);
+    text-align: center;
+    margin-left: 2.5%;
+    margin-right: 2.5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-send-message-container {
+    position: relative;
+    display: inline-block;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-send-message-container .chat-panel-message-text {
+    position: absolute;
+    right: 0;
+    top: 0;
+    max-width: 70%;
+    border-radius: 5px;
+    padding: 12px;
+    text-align: left;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    color: black;
+    background: rgb(162, 162, 162);
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-receive-message-container {
+    position: relative;
+    display: inline-block;
+    width: 95%;
+    margin-left: 2.5%;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-receive-message-container .chat-panel-initial {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 30px;
+    color: white;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-receive-message-container .chat-panel-user-name {
+    position: absolute;
+    left: 55px;
+    top: 0;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 10px;
+    color: white;
+    background: transparent;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-receive-message-container .chat-panel-message-text {
+    position: absolute;
+    left: 55px;
+    top: 26px;
+    max-width: 52%;
+    border-radius: 5px;
+    padding: 12px;
+    text-align: left;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    color: black;
+    background: rgb(0, 208, 231);
+}
+
+.chat-panel-message-text .chat-panel-image-button {
+    width: 150px;
+    height: 150px;
+    margin-top: 5px;
+    background: black;
+}
+
+.chat-panel-message-text .chat-panel-download-button {
+    width: 150px;
+    height: 30px;
+    line-height: 30px;
+    margin-top: 5px;
+    border-radius: 5px;
+    background: rgb(100, 100, 100);
+    text-align: center;
+}
+
+.chat-panel .chat-panel-list-container .chat-panel-time-text {
+    position: absolute;
+    bottom: -5px;
+    height: 25px;
+    text-align: left;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 10px;
+    color: white;
+    background: transparent;
+}
+
+.chat-panel .chat-panel-input-text {
+    position: absolute;
+    left: 50%;
+    bottom: 30px;
+    width: 95%;
+    height: 30px;
+    transform: translateX(-50%);
+    border: none;
+    outline: none;
+    border-radius: 15px;
+    padding-left: 15px;
+    padding-right: 35px;
+    box-sizing: border-box;
+    font-family: 'NotoSansKR', sans-serif;
+    font-size: 14px;
+    color: rgb(50, 50, 50);
+    background: #ffffff;
+    cursor: text;
+}
+
+.chat-panel .chat-panel-send-button {
+    position: absolute;
+    right: 3%;
+    bottom: 30px;
+    width: 30px;
+    height: 30px;
+    border: none;
+    cursor: pointer;
+}
+
+/* 채팅창 End */

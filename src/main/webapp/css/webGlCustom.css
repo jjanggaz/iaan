@@ -1,0 +1,10 @@
+
+
+input[type='text']#mainPopupInputText {
+  padding: 5px 10px !important;
+  border-radius: 2px;
+  color: #111111;
+}
+input[type='text']#mainPopupInputText::placeholder {
+  color: rgb(128, 128, 128);
+}

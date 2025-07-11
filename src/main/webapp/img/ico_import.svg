@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="27" height="27" viewBox="0 0 27 27">
+    <path data-name="사각형 1578" style="fill:none" d="M0 0h27v27H0z"/>
+    <g data-name="그룹 479">
+        <g data-name="그룹 477">
+            <path data-name="패스 651" d="M1217.021-1038.445a2.344 2.344 0 0 0 2.344 2.345h3.743l-6.087-6.087z" transform="translate(-1200.152 1044.226)" style="stroke:#d4d4d4;stroke-linecap:round;stroke-linejoin:round;fill:#d4d4d4"/>
+            <path data-name="패스 652" d="M1216.629-1042.187h-10.74a2.244 2.244 0 0 0-2.276 2.213v18.481a2.245 2.245 0 0 0 2.276 2.214h14.373a2.246 2.246 0 0 0 2.277-2.214v-14.948z" transform="translate(-1199.582 1044.226)" style="stroke:#d4d4d4;stroke-linecap:round;stroke-linejoin:round;fill:none"/>
+        </g>
+        <g data-name="그룹 478">
+            <path data-name="패스 653" d="M1213.36-1033.146a4.791 4.791 0 0 0-4.791 4.792 4.791 4.791 0 0 0 4.791 4.791 4.792 4.792 0 0 0 4.792-4.791 4.792 4.792 0 0 0-4.792-4.792zm2.262 5.217h-1.837v1.837a.425.425 0 0 1-.425.425.425.425 0 0 1-.425-.425v-1.837h-1.835a.425.425 0 0 1-.425-.425.425.425 0 0 1 .425-.425h1.837v-1.838a.425.425 0 0 1 .425-.425.425.425 0 0 1 .425.425v1.838h1.837a.425.425 0 0 1 .425.425.425.425 0 0 1-.427.425z" style="fill:#d4d4d4" transform="translate(-1199.867 1043.547)"/>
+        </g>
+    </g>
+</svg>

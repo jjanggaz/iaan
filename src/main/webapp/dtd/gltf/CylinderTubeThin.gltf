@@ -1,0 +1,156 @@
+{
+    "asset": {
+        "version": "2.0",
+        "generator": "Open Asset Import Library (assimp v5.2.0)"
+    },
+    "extensionsUsed": [
+        "KHR_materials_volume",
+        "FB_ngon_encoding"
+    ],
+    "accessors": [
+        {
+            "bufferView": 0,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 170,
+            "type": "VEC3",
+            "max": [
+                0.40000006556510928,
+                0.005000003147870302,
+                0.3999999463558197
+            ],
+            "min": [
+                -0.3999999165534973,
+                -0.0049999975599348549,
+                -0.4000002145767212
+            ]
+        },
+        {
+            "bufferView": 1,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 170,
+            "type": "VEC3",
+            "max": [
+                1.0,
+                1.0,
+                1.0
+            ],
+            "min": [
+                -1.0,
+                -1.0,
+                -1.0
+            ]
+        },
+        {
+            "bufferView": 2,
+            "byteOffset": 0,
+            "componentType": 5126,
+            "count": 170,
+            "type": "VEC2",
+            "max": [
+                1.0,
+                1.0
+            ],
+            "min": [
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "bufferView": 3,
+            "byteOffset": 0,
+            "componentType": 5125,
+            "count": 480,
+            "type": "SCALAR",
+            "max": [
+                169
+            ],
+            "min": [
+                0
+            ]
+        }
+    ],
+    "buffers": [
+        {
+            "byteLength": 7360,
+            "uri": "CylinderTubeThin.bin"
+        }
+    ],
+    "bufferViews": [
+        {
+            "buffer": 0,
+            "byteOffset": 0,
+            "byteLength": 2040,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 2040,
+            "byteLength": 2040,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 4080,
+            "byteLength": 1360,
+            "target": 34962
+        },
+        {
+            "buffer": 0,
+            "byteOffset": 5440,
+            "byteLength": 1920,
+            "target": 34963
+        }
+    ],
+    "materials": [
+        {
+            "name": "SpawnPointRing",
+            "pbrMetallicRoughness": {
+                "baseColorFactor": [
+                    1.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "metallicFactor": 0.0
+            },
+            "emissiveFactor": [
+                1.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "meshes": [
+        {
+            "name": "Scene",
+            "primitives": [
+                {
+                    "mode": 4,
+                    "material": 0,
+                    "indices": 3,
+                    "attributes": {
+                        "POSITION": 0,
+                        "NORMAL": 1,
+                        "TEXCOORD_0": 2
+                    }
+                }
+            ]
+        }
+    ],
+    "nodes": [
+        {
+            "name": "RootNode",
+            "mesh": 0
+        }
+    ],
+    "scenes": [
+        {
+            "nodes": [
+                0
+            ]
+        }
+    ],
+    "scene": 0
+}

@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40">
+    <g data-name="그룹 518">
+        <path data-name="사각형 1608" transform="rotate(-90 15.103 9.055)" style="stroke-linejoin:bevel;stroke:#383e47;fill:#dee2e6;stroke-linecap:round" d="M0 0h8.316v8.316H0z"/>
+        <g data-name="그룹 517">
+            <path data-name="사각형 1609" transform="rotate(-90 24.896 -.739)" style="fill:#fdfdfd;stroke-miterlimit:10;stroke:#383e47" d="M0 0h8.316v8.316H0z"/>
+            <g data-name="그룹 516">
+                <path data-name="사각형 1610" transform="rotate(-90 30.411 4.776)" style="fill:#fdfdfd;stroke-miterlimit:10;stroke:#383e47" d="M0 0h8.316v8.316H0z"/>
+                <path data-name="사각형 1611" transform="rotate(-90 19.382 -6.252)" style="fill:#fdfdfd;stroke-miterlimit:10;stroke:#383e47" d="M0 0h8.316v8.316H0z"/>
+            </g>
+        </g>
+        <path data-name="패스 704" d="M2060.468-324.09h-3.406v-22.457h3.406" style="stroke:#fff;stroke-linecap:square;fill:none;stroke-linejoin:bevel" transform="translate(-2037.387 355.419)"/>
+        <path data-name="선 48" transform="translate(16.949 20.1)" style="stroke:#fff;stroke-linecap:square;fill:none;stroke-linejoin:bevel" d="M0 0h6.132"/>
+    </g>
+    <path data-name="사각형 1612" style="fill:none" d="M0 0h40v40H0z"/>
+</svg>

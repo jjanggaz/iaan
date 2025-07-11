@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.CheckItemMapper">
+
+    <select id="selectCheckItemList" parameterType="SearchDTO" resultType="CheckItemDTO">
+    
+
+		WITH MAIN AS(
+		SELECT	
+							 CASE WHEN PDCI.CHECK_CNT > 0 THEN 'V' ELSE '' END CHECK_VALUE1
+							, CASE WHEN PDCI.CHECK_CNT = 0 THEN 'V' ELSE '' END CHECK_VALUE2
+							, PDCI.CHECK_CNT
+							, PDCI.ITEM
+							, PDC.DWG_SEQ
+					FROM 	tb_kc_dwg_mst PDC
+						INNER JOIN tb_kc_dwg_mst_item PDCI
+							ON PDCI.DWG_SEQ = PDC.DWG_SEQ
+					WHERE	PDC.DWG_SEQ =#{dwgSeq}
+		
+				
+		)	
+		SELECT 	DC.CD_NM, DD.ITEM
+			,DD.CHECK_VALUE1
+			,DD.CHECK_VALUE2
+			,DD.CHECK_CNT
+			,DD.DWG_SEQ
+			,DC.SORT_SEQ AS ROWNUM
+			,DC.USE_YN
+		FROM	   tb_kc_code DC
+			LEFT JOIN  MAIN DD			ON	DD.ITEM = DC.CD_ID
+		WHERE  DC.CD_GROUP = '004'
+		ORDER BY DC.SORT_SEQ
+    
+    </select>
+
+
+   
+    
+    <insert id="insertDwgItem" parameterType="CheckItemDTO">
+    INSERT INTO tb_kc_DWG_mst_ITEM(DWG_SEQ,  ITEM, CHECK_CNT)
+			VALUES(	#{dwgSeq}, #{item}, #{checkCnt})
+	ON DUPLICATE KEY UPDATE
+    		 DWG_SEQ = #{dwgSeq}
+	        , ITEM = #{item}
+	        , CHECK_CNT = #{checkCnt}
+    </insert>
+    
+    <insert id="insertDwgItemDesc" parameterType="CheckItemDTO">
+    <selectKey keyProperty="itemDescSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(ITEM_DESC_SEQ), 0) + 1 FROM tb_kc_dwg_mst_item_desc WHERE DWG_SEQ =	#{dwgSeq} AND   ITEM= #{item}
+    </selectKey>
+      INSERT INTO tb_kc_dwg_mst_item_desc(DWG_SEQ,  ITEM,ITEM_DESC_SEQ , HANDLE,NAME )
+			VALUES(	#{dwgSeq}, #{item}, #{itemDescSeq}, #{handle}, #{name}) 
+	 
+    </insert>
+    
+    
+    <delete id="delDwgItemDesc" parameterType="int">
+    	DELETE FROM tb_kc_dwg_mst_item_desc WHERE DWG_SEQ =	#{dwgSeq} 
+    </delete>
+    <select id="selectCheckItemDescList" parameterType="SearchDTO" resultType="CheckItemDTO">
+
+			SELECT	 A.DWG_SEQ
+				, A.ITEM
+				, A.ITEM_DESC_SEQ
+				, A.HANDLE
+				, A.NAME
+				, COUNT(B.DWG_SEQ) HANDLE_CNT
+			FROM	tb_kc_dwg_mst_item_desc a
+			LEFT JOIN tb_kc_json_symbol B ON (A.DWG_SEQ = B.DWG_SEQ AND A.HANDLE =B.HANDLE) 
+			WHERE	A.DWG_SEQ =  #{dwgSeq}
+				AND A.ITEM = #{item}
+			GROUP BY A.DWG_SEQ
+				, A.ITEM
+				, A.ITEM_DESC_SEQ
+				, A.HANDLE
+				, A.NAME
+			ORDER BY ITEM_DESC_SEQ
+		
+    </select>
+	<select id="selectTagList" parameterType="int" resultType="DwgTagDTO">
+			SELECT	DWG_SEQ
+				, TAG_SEQ
+				, TAG_NM
+			FROM	tb_kc_dwg_TAG
+			WHERE	DWG_SEQ = #{dwgSeq}
+    </select>
+	<insert id="insertWbs" parameterType="Map">
+	
+		DELETE FROM tb_kc_wbs WHERE tag_seq = #{tagSeq};
+		
+		DELETE FROM tb_kc_wbs_actual WHERE tag_seq = #{tagSeq};
+		
+    	INSERT INTO tb_kc_wbs(tag_seq,w_cd,PLAN_QUANTITY,use_flag,reg_id,reg_date) 
+		SELECT tag_seq,'001',COUNT(gubun) ,'Y','admin',NOW() 
+		FROM tb_kc_json_symbol
+		WHERE dwg_seq = #{dwgSeq}
+			AND tag_seq = #{tagSeq}
+			AND gubun ='TUBE_LINE'
+		GROUP BY dwg_seq,tag_seq	;
+      
+	 
+    </insert>
+
+
+</mapper>

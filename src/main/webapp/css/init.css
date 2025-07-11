@@ -1,0 +1,184 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Noto Sans KR', 'NanumGothic', Dotum, Arial, sans-serif;
+}
+
+header, nav, section, article, footer {
+	display: block;
+}
+
+img {
+	vertical-align: top;
+}
+
+/* test */
+a:link, a:visited, a:hover, a:active {
+	text-decoration: none;
+	color: inherit;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+	blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn,
+	em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var,
+	b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend,
+	button, textarea, option, table, caption, tbody, tfoot, thead, tr, th,
+	td, article, aside, canvas, details, embed, figure, figcaption, footer,
+	header, hgroup, menu, nav, output, ruby, section, summary, time, mark,
+	audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	line-height: inherit;
+	outline: none;
+	box-sizing: border-box;
+	word-wrap: break-word;
+	word-break: keep-all;
+}
+
+input, select {
+	margin: 0;
+	padding: 0;
+	outline: none;
+	box-sizing: border-box;
+	font-size: inherit;
+	color: inherit;
+	background: none;
+	border: none;
+	cursor: pointer;
+}
+
+.list-paging {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 38px;
+	padding: 0 25px;
+	width: 49px;
+	font-size: 26px;
+	text-align: center;
+	color: #1d1d1f;
+	cursor: pointer;
+}
+
+address, caption, cite, code, dfn, em, th, var, optgroup {
+	font-style: normal;
+	font-weight: normal;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: inherit;
+	line-height: inherit;
+}
+
+body, input, button, textarea, select, option, label, fieldset, legend {
+	font-family: inherit;
+}
+
+label {
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+.align_m {
+	vertical-align: middle;
+}
+
+blockquote, q {
+	quotes: none;
+}
+
+a {
+	text-decoration: none;
+	color: inherit;
+}
+
+input {
+	border-radius: 0px;
+}
+
+select[disabled], input[disabled] {
+	border: 1px solid #dfdfdf;
+	background: #f0f0f0;
+}
+
+blockquote:before, blockquote:after, q:before, q:after {
+	content: "";
+	display: inline-block;
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+li>a {
+	display: block;
+	height: 100%;
+}
+
+a.btn {
+	vertical-align: middle;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	border: none;
+	text-decoration: inherit;
+	color: inherit;
+}
+
+.ellipsis {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: left;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	list-style: none;
+}
+
+a {
+	border: none;
+	text-decoration: none;
+	color: inherit;
+}
+
+a:hover {
+	border: none;
+	text-decoration: none;
+	color: inherit;
+}
+
+a, button, .btn {
+	padding: 0;
+	outline: none !important;
+	color: inherit;
+	border-radius: 0;
+	cursor: pointer;
+}
+
+li>button {
+	background: inherit;
+	padding: 0;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.AtchFileMapper">
+
+    <select id="selectAtchFileList" parameterType="AtchFileDTO" resultType="AtchFileDTO">
+    SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM
+			, FILE_SEQ, TABLE_NM, REF_SEQ, FILE_TYPE, FILE_PATH
+			, FILE_NM_ORI, FILE_NM, FILE_LENGTH, FILE_STATUS
+			, REG_ID, REG_DATE, MOD_ID, MOD_DATE
+			, CONCAT(FILE_PATH, '/', FILE_NM) AS FILE_URL
+	FROM	tb_kc_atch_file
+			,(SELECT @ROWNUM:=0) AS R
+	WHERE	TABLE_NM = #{tableNm}
+		AND	REF_SEQ = #{refSeq}
+		AND	FILE_STATUS = 'U'
+	ORDER BY FILE_SEQ
+    </select>
+    
+    
+    <select id="selectAtchIssueFileList" parameterType="AtchFileDTO" resultType="AtchFileDTO">
+    SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM
+			, A.FILE_ID, A.FILE_SEQ,  FILE_TYPE, FILE_PATH
+			, FILE_NM_ORI, FILE_NM, FILE_LENGTH, FILE_STATUS
+			, A.REG_ID, A.REG_DATE, A.MOD_ID, A.MOD_DATE
+			, CONCAT(FILE_PATH, '/', FILE_NM) AS FILE_URL
+	FROM	tb_kc_atch_file A
+			,tb_kc_issue B
+			,(SELECT @ROWNUM:=0) AS R
+	WHERE	A.FILE_ID = B.FILE_ID
+		AND B.ISSUE_SEQ =  #{issueSeq}
+	ORDER BY FILE_SEQ
+    </select>
+
+    <insert id="insertAtchFile" parameterType="AtchFileDTO" useGeneratedKeys="true" >
+    <selectKey keyProperty="fileId" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(FILE_ID), 0) + 1 FROM tb_kc_atch_file
+    </selectKey>
+    INSERT INTO tb_kc_atch_file (FILE_ID, FILE_SEQ, FILE_TYPE
+							, FILE_PATH, FILE_NM_ORI, FILE_NM, FILE_LENGTH, FILE_STATUS
+							, REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+					VALUES (#{fileId}, #{fileSeq},  #{fileType}
+							, #{filePath}, #{fileNmOri}, #{fileNm}, #{fileLength}, #{fileStatus}
+							, #{regId}, NOW(), #{regId}, NOW())
+    </insert>
+    
+    
+    <select id="selectAtchFileId"  resultType="int" >
+		SELECT IFNULL(MAX(FILE_ID), 0) + 1 FROM tb_kc_atch_file
+    </select>
+    <insert id="insertMultiAtchFile" parameterType="AtchFileDTO" useGeneratedKeys="true" keyProperty="fileId">
+    
+    INSERT INTO tb_kc_atch_file (FILE_ID, FILE_SEQ, FILE_TYPE
+							, FILE_PATH, FILE_NM_ORI, FILE_NM, FILE_LENGTH, FILE_STATUS
+							, REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+					VALUES (#{fileId}, #{fileSeq},  #{fileType}
+							, #{filePath}, #{fileNmOri}, #{fileNm}, #{fileLength}, #{fileStatus}
+							, #{regId}, NOW(), #{regId}, NOW())
+    </insert>
+    
+    <insert id="insertMultiAtchFileSeq" parameterType="AtchFileDTO" useGeneratedKeys="true">
+    <selectKey keyProperty="fileSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(FILE_SEQ)+1, 0) FROM tb_kc_atch_file where FILE_ID = #{fileId}
+    </selectKey>
+    INSERT INTO tb_kc_atch_file (FILE_ID, FILE_SEQ, FILE_TYPE
+							, FILE_PATH, FILE_NM_ORI, FILE_NM, FILE_LENGTH, FILE_STATUS
+							, REG_ID, REG_DATE, MOD_ID, MOD_DATE)
+					VALUES (#{fileId}, #{fileSeq},  #{fileType}
+							, #{filePath}, #{fileNmOri}, #{fileNm}, #{fileLength}, #{fileStatus}
+							, #{regId}, NOW(), #{regId}, NOW())
+    </insert>
+
+    <update id="updateAtchFile" parameterType="AtchFileDTO">
+    UPDATE	tb_kc_atch_file
+    	SET	MOD_ID = #{modId}
+    		, MOD_DATE = NOW()
+   		<if test='fileNmOri != null and fileNmOri != ""'>
+			, FILE_NM_ORI = #{fileNmOri}
+		</if>
+		<if test='fileNm != null and fileNm != ""'>
+			, FILE_NM = #{fileNm}
+		</if>
+		<if test='fileLength != null and fileLength != ""'>
+			, FILE_LENGTH = #{fileLength}
+		</if>
+		<if test='fileStatus != null and fileStatus != ""'>
+			, FILE_STATUS = #{fileStatus}
+		</if>
+	WHERE	FILE_SEQ = #{fileSeq}
+    </update>
+
+    <update id="updateAtchFileVersion" parameterType="AtchFileDTO">
+    <selectKey keyProperty="version" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(VERSION), 0) + 1 AS version FROM tb_kc_ATCH_FILE WHERE TABLE_NM = #{tableNm} AND REF_SEQ = #{refSeq}
+    </selectKey>
+    UPDATE	tb_kc_ATCH_FILE
+		SET	FILE_NM = CONCAT(FILE_NM, '_', #{version})
+			, VERSION = #{version}
+	WHERE	TABLE_NM = #{tableNm}
+		AND	REF_SEQ = #{refSeq}
+		AND	VERSION = 0
+		<if test='fileType != null and fileType != ""'>
+		AND FILE_TYPE = #{fileType}
+		</if>
+    </update>
+
+    <select id="selectAtchFileMaxVersion" parameterType="AtchFileDTO" resultType="int">
+    SELECT	IFNULL(MAX(VERSION), -1) AS VERSION
+    FROM	tb_kc_ATCH_FILE
+    WHERE	TABLE_NM = #{tableNm}
+    	AND REF_SEQ = #{refSeq}
+    </select>
+
+    <update id="updateAtchFileSetVersion" parameterType="AtchFileDTO">
+    UPDATE	tb_kc_ATCH_FILE
+		SET	VERSION = #{version}
+	WHERE	TABLE_NM = #{tableNm}
+		AND	REF_SEQ = #{refSeq}
+		AND	VERSION = 0
+		<if test='fileType != null and fileType != ""'>
+		AND FILE_TYPE = #{fileType}
+		</if>
+    </update>
+
+    <update id="deleteAtchFile" parameterType="AtchFileDTO">
+    UPDATE	tb_kc_issue
+    	SET	FILE_STATUS = 'D'
+	WHERE	FILE_SEQ = #{fileSeq}
+    </update>
+
+    <select id="selectrootvalvefileList" parameterType="String" resultType="RootValveFileDTO">
+  		SELECT A.DWG_SEQ,A.TAG_SEQ,A.TAG_NM 
+			,B.DWG_FILE_NM
+			,B.SVG_FILE_NM
+			,B.JSON_FILE_NM
+			,B.FILE_DWG
+			,B.FILE_SVG
+			,B.FILE_JSON
+			,C.FILE_NM       AS DWG_FILE_NM
+			,C.FILE_NM_ORI   AS DWG_FILE_ORI
+			,C.FILE_PATH     AS DWG_FILE_PATH
+			,D.FILE_NM       AS SVG_FILE_NM
+			,D.FILE_NM_ORI   AS SVG_FILE_ORI
+			,D.FILE_PATH     AS SVG_FILE_PATH
+			,E.FILE_NM       AS JSON_FILE_NM
+			,E.FILE_NM_ORI   AS JSON_FILE_ORI
+			,E.FILE_PATH     AS JSON_FILE_PATH
+		FROM tb_kc_dwg_tag A
+		   , tb_kc_dwg_MST B
+		    LEFT JOIN tb_kc_atch_file C ON B.FILE_DWG = C.FILE_ID
+		    LEFT JOIN tb_kc_atch_file D ON B.FILE_SVG = D.FILE_ID
+		    LEFT JOIN tb_kc_atch_file E ON B.FILE_JSON = E.FILE_ID
+		WHERE A.DWG_SEQ = B.DWG_SEQ
+		   AND A.TAG_NM =  #{tag}
+ 	</select>
+ 	
+ 	
+ 	
+    <select id="selectAtchFilePath" parameterType="AtchFileDTO" resultType="AtchFileDTO">
+    SELECT	FILE_ID, FILE_SEQ, CONCAT(FILE_PATH, FILE_NM) AS FILE_URL ,FILE_PATH,FILE_NM
+	FROM	tb_kc_atch_file
+	WHERE	FILE_ID =  #{fileId}
+		AND	FILE_SEQ = 0
+    </select>
+    
+    
+    <select id="selectAtchFileTagPath" parameterType="AtchFileDTO" resultType="AtchFileDTO">
+    SELECT	FILE_ID, FILE_SEQ, CONCAT(FILE_PATH, FILE_NM) AS FILE_URL ,FILE_PATH,FILE_NM
+	FROM	tb_kc_atch_file
+	WHERE	FILE_ID =  ( SELECT FILE_SVG FROM tb_kc_dwg_mst  a	, tb_kc_dwg_tag b WHERE A.DWG_SEQ = B.DWG_SEQ  AND B.TAG_NM  = #{tagNm})
+		AND	FILE_SEQ = 0
+    </select>
+</mapper>

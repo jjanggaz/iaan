@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="70" height="70" viewBox="0 0 70 70">
+    <defs>
+        <linearGradient id="wsw3njs4bb" x1=".5" x2=".5" y2="1" gradientUnits="objectBoundingBox">
+            <stop offset="0" stop-color="#434a61"/>
+            <stop offset="1" stop-color="#59617a"/>
+        </linearGradient>
+        <clipPath id="hxz2pn4cya">
+            <circle data-name="타원 1486" cx="35" cy="35" r="35" transform="translate(15 15)" style="fill:#fff;stroke:#707070"/>
+        </clipPath>
+    </defs>
+    <g data-name="마스크 그룹 47" style="clip-path:url(#hxz2pn4cya)" transform="translate(-15 -15)">
+        <path data-name="패스 10822" d="M70.711 35.359A35.355 35.355 0 1 1 35.355 0a35.355 35.355 0 0 1 35.356 35.359" transform="translate(14.645 14.641)" style="fill:url(#wsw3njs4bb)"/>
+        <path data-name="패스 10823" d="M1097.948 629a15.148 15.148 0 1 1-15.148-15.148A15.148 15.148 0 0 1 1097.948 629" transform="translate(-1033.191 -587.816)" style="fill:#aab3cf"/>
+        <path data-name="패스 10824" d="M503.76 2417.229c0 13.264-11.912 24.015-26.6 24.015s-26.6-10.751-26.6-24.015c0-10.171 7-18.865 16.892-22.364a15.149 15.149 0 0 0 19.419 0c9.891 3.5 16.892 12.192 16.892 22.364" transform="translate(-427.55 -2335.772)" style="fill:#aab3cf"/>
+    </g>
+</svg>

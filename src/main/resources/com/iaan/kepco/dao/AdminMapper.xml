@@ -1,0 +1,482 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.iaan.kepco.dao.AdminMapper">
+
+    <select id="selectDwgMngList" parameterType="SearchDTO" resultType="DwgMngDTO">
+	   
+		SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+		FROM	(
+			SELECT 
+			     GROUP_CONCAT(distinct B.TAG_SEQ) AS TAG_SEQ
+				,A.DWG_PLANT
+				,A.DWG_SEQ
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+				,A.DWG_UNIT
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+				,A.DWG_BUILDING
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+				,A.DWG_LEVEL
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+				,A.W_CD
+			    ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.W_CD AND CD_GROUP = '011' ) W_CD_NM
+				,GROUP_CONCAT(distinct B.TAG_NM) AS ROOT_VALVE_NM
+				,A.REG_DATE
+				,A.FILE_AE
+				,A.FILE_DWG
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_AE) AS AE_NAME
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DWG) AS DWG_NAME
+				,GROUP_CONCAT(distinct C.M_SEQ) AS M_SEQ
+				
+				,GROUP_CONCAT(distinct D.PASS_SEQ) AS PASS_SEQ
+				,GROUP_CONCAT(distinct D.PASS_TAG) AS PASS_TAG
+			FROM tb_kc_dwg_mst A
+			      left join tb_kc_dwg_mst_model c on (A.DWG_SEQ = C.DWG_SEQ)
+			      left join tb_kc_dwg_pass_tag d on (A.DWG_SEQ = d.DWG_SEQ)
+				, tb_kc_dwg_tag B
+				 
+			WHERE  A.DWG_SEQ = B.DWG_SEQ
+				   	<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  A.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  A.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  A.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  A.DWG_LEVEL = #{dwgLevel}
+					</if>
+					<if test='tagNm != null and tagNm != ""'>
+					 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+					</if>
+					<if test='dwgSeq != null and dwgSeq != ""'>
+					 AND  A.DWG_SEQ = #{dwgSeq}
+					</if>
+			GROUP BY 
+				 A.DWG_SEQ
+				,A.DWG_PLANT
+				,A.DWG_UNIT
+				,A.DWG_BUILDING
+				,A.DWG_LEVEL
+				
+			
+				,A.FILE_AE
+				,A.FILE_DWG
+				,A.FILE_AE
+				,A.FILE_DWG
+				,A.W_CD
+			ORDER BY A.DWG_BUILDING 
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+		ORDER BY ROWNUM
+		LIMIT #{startRowNum}, #{pageSize}
+	
+    </select>
+
+    <select id="selectDwgMngCnt" parameterType="SearchDTO" resultType="SearchDTO">
+	
+		SELECT COUNT(A.DWG_SEQ)  AS TOTAL_DATA_CNT
+		FROM tb_kc_dwg_mst A
+				
+		WHERE  1=1
+				
+			   	<if test='dwgPlant != null and dwgPlant != ""'>
+				 AND  A.DWG_PLANT = #{dwgPlant}
+				</if>
+				<if test='dwgUnit != null and dwgUnit != ""'>
+				 AND  A.DWG_Unit = #{dwgUnit}
+				</if>
+				<if test='dwgBuilding != null and dwgBuilding != ""'>
+				 AND  A.DWG_BUILDING = #{dwgBuilding}
+				</if>
+				<if test='dwgLevel != null and dwgLevel != ""'>
+				 AND  A.DWG_LEVEL = #{dwgLevel}
+				</if>
+				<if test='tagNm != null and tagNm != ""'>
+				 AND  B.TAG_NM like concat('%',#{tagNm},'%')
+				</if>
+				<if test='dwgSeq != null and dwgSeq != ""'>
+					 AND  A.DWG_SEQ  = #{dwgSeq}
+				</if>
+		
+    </select>
+    
+    
+    <select id="selectDwgMngOne" parameterType="SearchDTO" resultType="DwgMngDTO">
+	   	SELECT 
+			     GROUP_CONCAT(distinct B.TAG_SEQ) AS TAG_SEQ
+				,A.DWG_PLANT
+				,A.DWG_SEQ
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+				,A.DWG_UNIT
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+				,A.DWG_BUILDING
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+				,A.DWG_LEVEL
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+				,A.W_CD
+			    ,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.W_CD AND CD_GROUP = '011' ) W_CD_NM
+				,GROUP_CONCAT(distinct B.TAG_NM) AS ROOT_VALVE_NM
+				,A.REG_DATE
+				,A.FILE_AE
+				,A.FILE_DWG
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_AE) AS AE_NAME
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DWG) AS DWG_NAME
+				,GROUP_CONCAT(distinct C.M_SEQ) AS M_SEQ
+				
+				,GROUP_CONCAT(distinct D.PASS_SEQ) AS PASS_SEQ
+				,GROUP_CONCAT(distinct D.PASS_TAG) AS PASS_TAG
+				,( select FILE_NM_ORI from tb_kc_atch_file where file_id =  a.file_dwg ) dwg_file_nm
+				,( select FILE_NM_ORI from tb_kc_atch_file where file_id =  a.file_ae ) ae_file_nm
+			FROM tb_kc_dwg_mst A
+			      left join tb_kc_dwg_mst_model c on (A.DWG_SEQ = C.DWG_SEQ)
+			      left join tb_kc_dwg_pass_tag d on (A.DWG_SEQ = d.DWG_SEQ)
+				, tb_kc_dwg_tag B
+				 
+			WHERE  A.DWG_SEQ = B.DWG_SEQ
+				   
+					<if test='dwgSeq != null and dwgSeq != ""'>
+					 AND  A.DWG_SEQ = #{dwgSeq}
+					</if>
+			GROUP BY 
+				 A.DWG_SEQ
+				,A.DWG_PLANT
+				,A.DWG_UNIT
+				,A.DWG_BUILDING
+				,A.DWG_LEVEL
+				
+			
+				,A.FILE_AE
+				,A.FILE_DWG
+				,A.FILE_AE
+				,A.FILE_DWG
+				,A.W_CD
+		
+	
+    </select>
+    
+	<delete id="deleteDwgMst" parameterType="String">
+    DELETE	FROM	tb_kc_dwg_mst	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_dwg_check	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_dwg_mst_3dfile	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	
+	
+	
+	DELETE 	FROM	tb_kc_dwg_mst_item	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_dwg_mst_item_desc	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_dwg_mst_model	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_dwg_pass_tag	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_dwg_symbol	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	DELETE 	FROM	tb_kc_json_symbol	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	
+	
+	DELETE 	FROM	tb_kc_issue_comment	WHERE	issue_SEQ  in (select issue_SEQ from tb_kc_issue	WHERE	tag_SEQ  in (select tag_seq from tb_kc_dwg_tag where dwg_seq = #{dwgSeq} )  ) ;
+	
+	
+	DELETE 	FROM	tb_kc_issue	WHERE	tag_SEQ  in (select tag_seq from tb_kc_dwg_tag where dwg_seq = #{dwgSeq} ) ;
+	
+	
+	DELETE 	FROM	tb_kc_wbs	WHERE	tag_SEQ  in (select tag_seq from tb_kc_dwg_tag where dwg_seq = #{dwgSeq} ) ;
+	DELETE 	FROM	tb_kc_wbs_actual	WHERE	tag_SEQ  in (select tag_seq from tb_kc_dwg_tag where dwg_seq = #{dwgSeq} ) ;
+	DELETE 	FROM	tb_kc_issue	WHERE	tag_SEQ  in (select tag_seq from tb_kc_dwg_tag where dwg_seq = #{dwgSeq} ) ;
+	<!-- tag는 마지막에 지울것  -->
+	DELETE 	FROM	tb_kc_dwg_tag	WHERE	DWG_SEQ  = #{dwgSeq} ;
+
+    </delete>
+    
+    
+    <delete id="deleteDwgModel"  parameterType="String">
+    DELETE	FROM	tb_kc_dwg_mst_model	WHERE	DWG_SEQ  = #{dwgSeq} ;
+	</delete>
+    <insert id="insertDwgMst"  parameterType="DwgMstDTO">
+    <selectKey keyProperty="dwgSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(Dwg_seq), 0) + 1 FROM tb_kc_dwg_mst
+    </selectKey>
+    INSERT INTO tb_kc_dwg_mst (
+    		 DWG_SEQ                               
+			,STATUS                                
+			,DWG_FILE_NM                           
+			,DWG_FILE_AE_NM                        
+			,SVG_FILE_NM                           
+			,JSON_FILE_NM                          
+			,FILE_SVG                              
+			,FILE_DWG                              
+			,FILE_JSON                             
+			,FILE_AE                               
+			,FILE_DTDX                             
+			,DWG_PLANT                             
+			,DWG_UNIT                              
+			,DWG_BUILDING                          
+			,DWG_LEVEL                             
+			,DWG_PBS   
+			,W_CD                     
+			,REG_ID                                
+			,REG_DATE                              
+			,MOD_ID                                
+			,MOD_DATE     
+	)VALUES (#{dwgSeq}
+			,#{status}
+			,#{dwgFileNm}
+			,#{dwgFileAeNm}
+			,#{svgFileNm}
+			,#{jsonFileNm}
+			,#{fileSvg}
+			,#{fileDwg}
+			,#{fileJson}
+			,#{fileAe}
+			,#{fileDtdx}
+			,#{dwgPlant}
+			,#{dwgUnit}
+			,#{dwgBuilding}
+			,#{dwgLevel}
+			,SUBSTRING_INDEX(SUBSTRING_INDEX(#{dwgFileNm},'-',2),'-',-1)
+			,#{wCd}
+			,#{regId}
+			, NOW()
+			, #{regId}
+			, NOW()
+	)
+    </insert>
+    
+    
+    <insert id="insertDwgTag"  parameterType="DwgTagDTO">
+    <selectKey keyProperty="tagSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(tag_seq), 0) + 1 FROM tb_kc_dwg_tag
+    </selectKey>
+    INSERT INTO tb_kc_dwg_tag (
+    		 DWG_SEQ                               
+			,TAG_SEQ                                
+			,TAG_NM                           
+			,REG_ID                                
+			,REG_DATE     
+	)VALUES (#{dwgSeq}
+			,#{tagSeq}
+			,#{tagNm}
+			,#{regId}
+			,NOW()
+	)
+    </insert>
+    
+    
+    <update id="updateDwgTag"  parameterType="DwgTagDTO">
+    UPDATE tb_kc_dwg_tag SET  
+    	 TAG_PX = #{tagPx}
+    	,TAG_PY = #{tagPy}
+    	,TAG_PZ = #{tagPz}
+    WHERE TAG_NM = #{tagNm}
+    </update>
+    
+    
+    <insert id="insertDwgModel"  parameterType="DwgModelDTO">
+    INSERT INTO tb_kc_dwg_mst_model (
+    		 DWG_SEQ                               
+			,M_SEQ                                
+			,REG_ID                                
+			,REG_DATE     
+	)VALUES (#{dwgSeq}
+			,#{mSeq}
+			,#{regId}
+			,NOW()
+	) ON DUPLICATE KEY UPDATE
+    		  REG_ID = #{regId}
+	        , REG_DATE =NOW()
+    </insert>
+    
+    <insert id="insertDwgPassTag"  parameterType="DwgModelDTO">
+    <selectKey keyProperty="passSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(PASS_SEQ), 0) + 1 FROM tb_kc_dwg_pass_tag
+    </selectKey>
+    INSERT INTO tb_kc_dwg_pass_tag (
+    		 PASS_SEQ                               
+			,DWG_SEQ
+			,PASS_TAG                                
+			,REG_ID                                
+			,REG_DATE     
+	)VALUES (#{passSeq}
+			,#{dwgSeq}
+			,#{passTag}
+			,#{regId}
+			,NOW()
+	)
+    </insert>
+    
+    
+    <select id="selectModelMngList" parameterType="SearchDTO" resultType="ModelDTO">
+	   
+		SELECT	@ROWNUM:=@ROWNUM+1 AS ROWNUM, TEMP.*
+		FROM	(
+			SELECT A.M_SEQ  
+			    ,A.M_SEQ  as MODEL_SEQ              
+				,A.FILE_DGN             
+				,A.FILE_DTDX            
+				,A.FILE_CSV             
+				,A.DWG_PLANT            
+				,A.DWG_UNIT             
+				,A.DWG_BUILDING         
+				,A.DWG_LEVEL            
+				,A.USE_YN               
+				,A.REG_ID               
+				,A.REG_DATE             
+				,A.MOD_ID               
+				,A.MOD_DATE 
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DGN) AS FILE_DGN_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DTDX) AS FILE_DTDX_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_HDTDX) AS FILE_HDTDX_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_CSV) AS FILE_CSV_NM
+			FROM tb_kc_model A
+			WHERE  1=1
+			    	<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  A.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  A.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  A.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  A.DWG_LEVEL = #{dwgLevel}
+					</if>
+					
+			ORDER BY A.M_SEQ
+		)TEMP
+		,(SELECT @ROWNUM:=0) AS R
+		ORDER BY ROWNUM
+		LIMIT #{startRowNum}, #{pageSize}
+	
+    </select>
+
+    <select id="selectModelMngCnt" parameterType="SearchDTO" resultType="SearchDTO">
+	
+		SELECT COUNT(A.M_SEQ)  AS TOTAL_DATA_CNT
+		FROM tb_kc_model A
+		WHERE  1=1
+			    	<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  A.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  A.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  A.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  A.DWG_LEVEL = #{dwgLevel}
+					</if>
+					
+		
+    </select>
+    
+    <select id="selectModelCodeList" parameterType="SearchDTO" resultType="ModelDTO">
+		SELECT  A.M_SEQ  
+			    ,A.M_SEQ  as MODEL_SEQ   
+			    ,A.FILE_DGN             
+				,A.FILE_DTDX            
+				,A.FILE_CSV               
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DGN) AS FILE_DGN_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DTDX) AS FILE_DTDX_NM
+		FROM tb_kc_model A
+		WHERE  1=1
+			    	<if test='dwgPlant != null and dwgPlant != ""'>
+					 AND  A.DWG_PLANT = #{dwgPlant}
+					</if>
+					<if test='dwgUnit != null and dwgUnit != ""'>
+					 AND  A.DWG_Unit = #{dwgUnit}
+					</if>
+					<if test='dwgBuilding != null and dwgBuilding != ""'>
+					 AND  A.DWG_BUILDING = #{dwgBuilding}
+					</if>
+					<if test='dwgLevel != null and dwgLevel != ""'>
+					 AND  A.DWG_LEVEL = #{dwgLevel}
+					</if>
+	</select>
+	
+	
+	 <select id="selectModelMngOne" parameterType="SearchDTO" resultType="ModelDTO">
+	   
+		SELECT A.M_SEQ  
+			    ,A.M_SEQ  as MODEL_SEQ              
+				,A.FILE_DGN             
+				,A.FILE_DTDX            
+				,A.FILE_CSV             
+				,A.DWG_PLANT            
+				,A.DWG_UNIT             
+				,A.DWG_BUILDING         
+				,A.DWG_LEVEL            
+				,A.USE_YN               
+				,A.REG_ID               
+				,A.REG_DATE             
+				,A.MOD_ID               
+				,A.MOD_DATE 
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_PLANT) PLANT_NM
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_UNIT) UNIT_NM
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_BUILDING) BUILDING_NM
+				,(SELECT CD_NM FROM tb_kc_code WHERE CD_ID = A.DWG_LEVEL) LEVEL_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DGN) AS FILE_DGN_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_DTDX) AS FILE_DTDX_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_HDTDX) AS FILE_HDTDX_NM
+				,(SELECT FILE_NM_ORI FROM tb_kc_atch_file WHERE FILE_ID = A.FILE_CSV) AS FILE_CSV_NM
+			FROM tb_kc_model A
+			WHERE  1=1
+			    	<if test='modelSeq != null and modelSeq != ""'>
+					 AND  A.M_SEQ = #{modelSeq}
+					</if>
+		
+	
+    </select>
+	<delete id="deleteModelMst" parameterType="String">
+    DELETE
+	FROM	tb_kc_model
+	WHERE	M_SEQ  = #{mSeq}
+    </delete>
+    
+    <delete id="deleteIssueMst" parameterType="String">
+    DELETE
+	FROM	tb_kc_issue
+	WHERE	ISSUE_SEQ  = #{issueSeq};
+	DELETE
+	FROM tb_kc_issue_comment
+	WHERE ISSUE_SEQ  = #{issueSeq};
+    </delete>
+    
+    <insert id="insertModel"  parameterType="ModelDTO">
+    <selectKey keyProperty="mSeq" resultType="int" order="BEFORE">
+		SELECT IFNULL(MAX(m_seq), 0) + 1 FROM tb_kc_model
+    </selectKey>
+    INSERT INTO tb_kc_model (
+    		 M_SEQ                
+			,FILE_DGN             
+			,FILE_DTDX            
+			,FILE_CSV             
+			,DWG_PLANT            
+			,DWG_UNIT             
+			,DWG_BUILDING         
+			,DWG_LEVEL            
+			,USE_YN               
+			,REG_ID               
+			,REG_DATE             
+			,MOD_ID               
+			,MOD_DATE    
+	)VALUES (#{mSeq}
+			,#{fileDgn}
+			,#{fileDtdx}
+			,#{fileCsv}
+			,#{dwgPlant}
+			,#{dwgUnit}
+			,#{dwgBuilding}
+			,#{dwgLevel}
+			,'Y'
+			,#{regId}
+			, NOW()
+			, #{regId}
+			, NOW()
+	)
+    </insert>
+    
+</mapper>

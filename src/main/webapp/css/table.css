@@ -1,0 +1,62 @@
+
+
+table.tbl-basic {
+  
+}
+
+
+table {
+  border-collapse: collapse;
+}
+
+
+table.tbl-basic {
+ width: 100%;
+}
+table.tbl-basic th,
+table.tbl-basic td {
+ /* border-left-width: 1px; */
+ border-color: rgb(190, 190, 190);
+ border-style: solid;
+ /* border-bottom: 3px solid transparent; */
+ padding: 5px;
+ font-size: 18px;
+}
+table.tbl-basic th {
+ width: 100px;
+ padding: 10px;
+ text-align: left;
+ font-weight: bold;
+ border-top-width: 1px;
+ background: #f0f0f0;
+}
+table.tbl-basic tr:first-child th {
+}
+table.tbl-basic td {
+ font-weight: normal;
+}
+
+
+
+table.tbl-props {
+  
+}
+table.tbl-props > tbody > tr > th,
+table.tbl-props > tbody > tr > td {
+  font-size: 12px;
+  font-weight: normal;
+  color: #d4d4d4;
+  border:1px solid #2d2d2d;
+  background: transparent;
+}
+table.tbl-props > tbody > tr > th:first-child,
+table.tbl-props > tbody > tr > td:first-child {
+  border-left: 0 none;
+}
+table.tbl-props > tbody > tr > th:last-child,
+table.tbl-props > tbody > tr > td:last-child {
+  border-right: 0 none;
+}
+
+
+
