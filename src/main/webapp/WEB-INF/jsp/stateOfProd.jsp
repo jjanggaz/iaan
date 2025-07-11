@@ -23,7 +23,7 @@ $(window).resize(function() {
 	$("#grid-stateOfProd").setGridWidth($(".sect-cont .line-table").width());
 });
 
-function initGridListPlan(gridData)	{
+function initGridListProd(gridData)	{
 	$("#grid-stateOfProd").jqGrid('GridUnload');
 	$("#grid-stateOfProd").jqGrid({
 		colNames: ["Plant", "Unit", "Building", "Level", "루트밸브", "공종명", "시작일", "종료일", "계획물량", "실적물량", "시공사", "시공내역","공사계획",""],

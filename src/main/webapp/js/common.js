@@ -108,8 +108,7 @@ function fnSearchList(pageNum)  {
         initGridListPlan(success.list);
       }else if(pageNm == "cont-calc") {
         initGridListCalc(success.list);
-      }else if(pageNm == "cont-check3d") {
-		  
+      }else if(pageNm == "cont-check3d") {		  
         initGridListCheck3d(success.list);
       }else if(pageNm == "cont-check2d") {
         initGridListCheck2d(success.list);
@@ -117,14 +116,13 @@ function fnSearchList(pageNum)  {
         initGridListCheckIssue(success.list);
       }else if(pageNm == "cont-3dModel") {
         initGridListModel(success.list);
-      }else if(pageNm == "cont-2dDwg") {
-		
+      }else if(pageNm == "cont-2dDwg") {		
         initGridListDwg(success.list);
-      }else if(pageNm == "cont-symbol") {
-		
+      }else if(pageNm == "cont-symbol") {		
         initGridListSymbol(success.list);
+	  }else if(pageNm == "cont-stateOfProd") {		
+	    initGridListProd(success.list);
       }
-      
       
       fnPaging(success.totalDataCnt, pageNum);
     },
